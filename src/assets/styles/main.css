@@ -1,0 +1,10 @@
+body {
+  background-color: #edf2f9f5;
+}
+
+/* from 0 to 368px width */
+@media only screen and (max-width: 368px) {
+  .y-logo {
+    display: none;
+  }
+}
