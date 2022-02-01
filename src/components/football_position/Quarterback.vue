@@ -1,4 +1,5 @@
 <template>
+ <h5>Quarterback</h5>
   <div class="career-and-season">
     <h3 class="color-block">Career & Season Stats</h3>
     <div class="table-responsive">
@@ -183,7 +184,7 @@
 <script>
 export default {
   name: 'Quarterback',
-  props: [],
+  props: ['selected', 'gamesRecordPlayerInCleared', 'gameYears'],
   data () {
     return {
       // For UI to format dates
@@ -203,7 +204,7 @@ export default {
       ],
       playerNid: 1285416,
       games: [],
-      gameYears: [],
+      // gameYears: [],
       totalsByYear: [],
       careerTotals: []
     }
@@ -211,39 +212,11 @@ export default {
   computed: {
     // do something
   },
-  async mounted () {
-    // ======= fetch from URL API =======
-    // const athletesUrl = 'https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/athlete/sportNid/athleteNid'
-    const athletesUrl = 'https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/athlete/1701/1285416'
-    const res = await fetch(athletesUrl)
-    const data = await res.json()
-    console.log(data)
-    for (var i = 0; i < data.length; i++) {
-      const byuTeamIndex = data[i].fbgame.team.findIndex(x => x.name === 'BYU') // find index in array
-      const oppoTeamIndex = data[i].fbgame.team.findIndex(x => x.name !== 'BYU') // find index in array
-      const byuTeamStat = data[i].fbgame.team[byuTeamIndex]
-      const playerIndex = byuTeamStat.player.findIndex(x => x.player_nid === this.playerNid)
-      const playerStat = byuTeamStat.player[playerIndex]
+  mounted () {
+    console.log('selected', this.selected)
+    console.log('gamesRecordPlayerInCleared', this.gamesRecordPlayerInCleared)
 
-      // Insert game's info into player's info -> Makes template much easier to render data
-      // -> Makes data into same layer if they are stored in different place
-      // -> response.data[i].fbgame.team[0].player[p].nid = response.data[i].nid
-      playerStat.nid = data[i].nid
-      playerStat.title = data[i].title
-      playerStat.schedule_year = data[i].schedule_year
-      playerStat.event_date = data[i].event_date
-      playerStat.scores = data[i].fbgame.scores
-      playerStat.venue = data[i].fbgame.venue
-      playerStat.linescore = data[i].fbgame.team[byuTeamIndex].linescore
-      playerStat.opp_score = data[i].fbgame.team[oppoTeamIndex].linescore.score
-      playerStat.byu_score = data[i].fbgame.team[byuTeamIndex].linescore.score
-      this.games.push(playerStat)
-
-      // store different years for grouping stats table
-      if (this.gameYears.indexOf(playerStat.schedule_year) === -1) {
-        this.gameYears.push(playerStat.schedule_year)
-      }
-    }
+    this.games = this.gamesRecordPlayerInCleared
     this.calTotalsByYear(this.gameYears)
   },
   methods: {

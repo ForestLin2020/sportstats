@@ -27,7 +27,7 @@ export default {
     const res = await fetch(athletesUrl)
     const data = await res.json()
     this.player = data
-    console.log(data)
+    // console.log(data)
   },
   methods: {
     async submit () {
@@ -37,7 +37,7 @@ export default {
       const res = await fetch(gameUrl)
       const data = await res.json()
       this.games.push(data[0])
-      console.log(this.games)
+      // console.log(this.games)
     }
   }
 }

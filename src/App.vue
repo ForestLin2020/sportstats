@@ -8,9 +8,10 @@
     <div class="menu-item"><router-link to="/statistics">Statistics</router-link></div>
   </div>
 </header>
-<router-view/>
+<div class="router-view">
+  <router-view/>
+</div>
 </template>
-
 <style>
 
 #app {
@@ -53,6 +54,10 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: fixed;
+  background-color: #0b5ed7;
+  top: 0;
+  width: 100%;
 }
 
 #nav .menu-item {
@@ -74,6 +79,10 @@ header {
 #nav .menu-item a{
   color: inherit;
   text-decoration: none;
+}
+
+.router-view {
+  margin-top: 60px;
 }
 
 </style>

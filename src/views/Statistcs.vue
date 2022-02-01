@@ -58,19 +58,7 @@ export default {
   },
   components: {
     Query
-    // QueryButton
   },
-  // async mounted () {
-  //   // ======= fetch from URL API =======
-  //   const res1 = await fetch(tempAthletesUrl)
-  //   const data1 = await res1.json()
-  //   this.athletes = data1
-
-  //   // ======= fetch from URL API =======
-  //   const res2 = await fetch(tempGamesUrl)
-  //   const data2 = await res2.json()
-  //   this.game = data2
-  // },
   methods: {
     add () {
       // let quantity = this.events.length
