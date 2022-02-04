@@ -1,6 +1,6 @@
 <template>
   <div class="expander">
-    <div id="queryID" class="query mt-3 p-3 container">
+    <div class="query mt-3 p-3 container">
       <svg @click="$emit('remove')" width="1em" height="1em" viewBox="0 0 16 16" id="close" class="bi bi-x btn-outline-danger x-button" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
           <path fill-rule="evenodd" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
       </svg>
@@ -54,7 +54,7 @@
           </div>
         </div>
 
-        <div v-if="selected.category==='athlete'" class="col-sm">
+        <div v-if="selected.category==='athlete'" @change="getData" class="col-sm">
           <div class="form-group">
             <label>Athlete</label>
             <select class="form-select" v-model="selected.athleteNid">
@@ -63,7 +63,7 @@
           </div>
         </div>
 
-        <div v-if="selected.category==='game'" class="col-sm">
+        <div v-if="selected.category==='game'" @change="getData" class="col-sm">
           <div class="form-group">
             <label>Game</label>
             <select class="form-select" v-model="selected.gameNid">
@@ -72,7 +72,7 @@
           </div>
         </div>
 
-        <div v-if="selected.category==='coach'" class="col-sm">
+        <div v-if="selected.category==='coach'" @change="getData" class="col-sm">
           <div class="form-group">
             <label>Coach</label>
             <select class="form-select" v-model="selected.coach">
@@ -84,19 +84,37 @@
         <div class="col-sm">
           <div class="form-group">
             <label></label><br>
-            <button id="submit" type="submit" class="btn btn-outline-primary" @click="submit">Submit</button>
+            <button
+              id="submit"
+              type="submit"
+              :disabled="gamesRecordPlayerIn === null"
+              class="btn btn-outline-primary"
+              @click="submit"
+              >Submit
+            </button>
           </div>
         </div>
       </div>
-      <FootballAthlete ref="myFootball" v-if="selected.sport == '1701'" :selected="selected" :gamesRecordPlayerIn="gamesRecordPlayerIn"/>
-      <!-- <Quarterback /> -->
+      <FootballAthlete
+        ref="myFootball"
+        v-if="selected.sport == '1701'"
+        :selected="selected"
+        :gamesRecordPlayerIn="gamesRecordPlayerIn"
+      />
+      <VolleyballAthlete
+        ref="myVolleyball"
+        v-if="selected.sport == '1706'"
+        :selected="selected"
+        :gamesRecordPlayerIn="gamesRecordPlayerIn"
+      />
+      <h1 v-if="!isStatsExist">Sorry, there is no stats.</h1>
     </div>
   </div>
 </template>
 
 <script>
 import FootballAthlete from '@/components/FootballAthlete.vue'
-// import Quarterback from '@/components/Quarterback.vue'
+import VolleyballAthlete from '@/components/VolleyballAthlete.vue'
 
 export default {
   name: 'Query',
@@ -112,29 +130,41 @@ export default {
         coachNid: undefined
       },
       athletes: [],
-      gamesRecordPlayerIn: [],
+      gamesRecordPlayerIn: null,
       games: [],
       coaches: [],
-      years: []
+      years: [],
+      isStatsExist: true
     }
   },
   components: {
-    FootballAthlete
-    // Quarterback
+    FootballAthlete,
+    VolleyballAthlete
   },
   methods: {
-    async submit () {
-      console.log('this.selected', this.selected)
+    async getData () {
       if (this.selected.athleteNid) {
         // ======= fetch from URL API =======
         const athletesUrl = `https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/athlete/${this.selected.sport}/${this.selected.athleteNid}`
         const res = await fetch(athletesUrl)
         const data = await res.json()
         this.gamesRecordPlayerIn = data
-        this.$refs.myFootball.clearGames()
       }
-      // call child function
-      // this.bus.$emit('clearGames')
+    },
+    submit () {
+      console.log('selected', this.selected)
+      console.log('gamesRecordPlayerIn', this.gamesRecordPlayerIn)
+      // call child function to clear or reorganize the data
+      if (this.selected.sport === '1701') this.$refs.myFootball.reorganizeGames()
+      if (this.selected.sport === '1706') this.$refs.myVolleyball.reorganizeGames()
+      this.statsExist()
+    },
+    statsExist () {
+      if (this.gamesRecordPlayerIn.length === 0) {
+        this.isStatsExist = false
+      } else if (this.gamesRecordPlayerIn.length !== 0) {
+        this.isStatsExist = true
+      }
     },
     async getYears () {
       const yearsUrl = `${this.tempYearsUrl}/${this.selected.sport}`
@@ -142,7 +172,8 @@ export default {
       const res = await fetch(yearsUrl)
       const data = await res.json()
       this.years = data
-      console.log('years', this.years)
+      this.selected.category = undefined
+      // console.log('years', this.years)
     },
     async getAthleteOrGamesOrCoach () {
       if (this.selected.category === 'athlete') {
@@ -150,36 +181,36 @@ export default {
         this.selected.coachNid = undefined
         if (this.selected.sport && this.selected.year) {
           const athletesUrl = `${this.tempAthletesUrl}/${this.selected.sport}/${this.selected.year}`
-          console.log('athletesUrl', athletesUrl)
+          // console.log('athletesUrl', athletesUrl)
           // ======= fetch from URL API =======
           const res = await fetch(athletesUrl)
           const data = await res.json()
           this.athletes = data
-          console.log('this.athletes', this.athletes)
+          // console.log('this.athletes', this.athletes)
         }
       } else if (this.selected.category === 'game') {
         this.selected.athleteNid = undefined
         this.selected.coachNid = undefined
         if (this.selected.sport && this.selected.year) {
           const gamesUrl = `${this.tempGamesUrl}/${this.selected.sport}/${this.selected.year}`
-          console.log('gamesUrl', gamesUrl)
+          // console.log('gamesUrl', gamesUrl)
           // ======= fetch from URL API =======
           const res = await fetch(gamesUrl)
           const data = await res.json()
           this.games = data
-          console.log('this.games', this.games)
+          // console.log('this.games', this.games)
         }
       } else if (this.selected.category === 'coach') {
         this.selected.athleteNid = undefined
         this.selected.gameNid = undefined
         if (this.selected.sport && this.selected.year) {
           const coachUrl = `${this.tempCoachUrl}/${this.selected.sport}/${this.selected.year}`
-          console.log('coachUrl', coachUrl)
+          // console.log('coachUrl', coachUrl)
           // ======= fetch from URL API =======
           const res = await fetch(coachUrl)
           const data = await res.json()
           this.coaches = data
-          console.log('this.coaches', this.coaches)
+          // console.log('this.coaches', this.coaches)
         }
       }
     }
@@ -188,7 +219,6 @@ export default {
 </script>
 
 <style scoped>
-
 .query {
   background-color: white;
   box-shadow: 0px 0px 5px 1px rgb(0 0 0 / 20%);
@@ -211,6 +241,4 @@ export default {
   color: white;
   background-color: #0d6efd;
 }
-/* #0d6efd */
-/* #003DA5 */
 </style>

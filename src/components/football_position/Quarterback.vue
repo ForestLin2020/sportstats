@@ -1,7 +1,6 @@
 <template>
  <h5>Quarterback</h5>
   <div class="career-and-season">
-    <h3 class="color-block">Career & Season Stats</h3>
     <div class="table-responsive">
       <table class="table-striped table-sm table-condensed table table-hover table-bordered total_up">
         <thead class='football-thead'>
@@ -182,6 +181,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'Quarterback',
   props: ['selected', 'gamesRecordPlayerInCleared', 'gameYears'],
@@ -215,13 +215,15 @@ export default {
   mounted () {
     console.log('selected', this.selected)
     console.log('gamesRecordPlayerInCleared', this.gamesRecordPlayerInCleared)
-
+    console.log('gameYears', this.gameYears)
     this.games = this.gamesRecordPlayerInCleared
     this.calTotalsByYear(this.gameYears)
   },
   methods: {
     formDateStr (str) {
       var date = new Date(str)
+      // need to double check if area different then show different data
+      date.setHours(date.getHours() - 6)
       var dateStr = this.months[date.getMonth()] + ' ' + date.getDate()
       return dateStr
     },

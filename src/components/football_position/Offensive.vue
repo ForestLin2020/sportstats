@@ -1,3 +1,3 @@
 <template>
-    <h5>Tight End</h5>
+    <h5>Offensive</h5>
 </template>

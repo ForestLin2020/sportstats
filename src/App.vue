@@ -58,6 +58,7 @@ header {
   background-color: #0b5ed7;
   top: 0;
   width: 100%;
+  z-index: 10;
 }
 
 #nav .menu-item {
