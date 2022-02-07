@@ -27,7 +27,7 @@
         <tbody>
           <tr v-for="(totals,index) in totalsByYear" :key="index">
             <td>{{ totals.schedule_year }}</td>
-            <td>MS</td>
+            <td>{{ totals.ms }}</td>
             <td>{{ totals.gp }}</td>
             <td>{{ totals.attack.k }}</td>
             <td>{{ totals.attack.e }}</td>
@@ -46,7 +46,7 @@
           </tr>
           <tr>
             <th>TOTALS:</th>
-            <th>MS</th>
+            <th>{{ careerTotals.ms }}</th>
             <th>{{ careerTotals.gp }}</th>
             <th v-if="careerTotals.attack && careerTotals.attack.k" nowrap>{{ careerTotals.attack.k }}</th><th v-else>0</th>
             <th v-if="careerTotals.attack && careerTotals.attack.e" nowrap>{{ careerTotals.attack.e }}</th><th v-else>0</th>
@@ -76,21 +76,22 @@
               <th>Opponent</th>
               <th>Date</th>
               <th>Result</th>
-              <th >S</th>
-              <th >K</th>
-              <th >E</th>
-              <th >TA</th>
-              <th >Pct</th>
-              <th >Ast</th>
-              <th >SA</th>
-              <th >SE</th>
-              <th >RE</th>
-              <th >Dig</th>
-              <th >BS</th>
-              <th >BA</th>
-              <th >BE</th>
-              <th >BHE</th>
-              <th >Pts</th>
+              <th>MS</th>
+              <th>S</th>
+              <th>K</th>
+              <th>E</th>
+              <th>TA</th>
+              <th>Pct</th>
+              <th>Ast</th>
+              <th>SA</th>
+              <th>SE</th>
+              <th>RE</th>
+              <th>Dig</th>
+              <th>BS</th>
+              <th>BA</th>
+              <th>BE</th>
+              <th>BHE</th>
+              <th>Pts</th>
             </tr>
           </thead>
           <tbody>
@@ -103,6 +104,12 @@
               <td nowrap v-if="(game.byu_score - 0) == (game.opp_score - 0)"><b style="color: blue">T </b> {{ game.byu_score }}-{{ game.opp_score }}</td>
               <td nowrap v-if="(game.byu_score - 0) < (game.opp_score - 0)"><b style="color: red">L </b> {{ game.byu_score }}-{{ game.opp_score }}</td>
               <!-- <td nowrap ng-if="!S.player_game_stats.byu_score">-</td> -->
+              <!-- <td v-if="game.ms" nowrap>{{ game.ms }}</td><td v-else>0</td> -->
+              <td v-if="game.ms == '1'">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
+                  <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+                </svg>
+              </td><td v-else></td>
               <td v-if="game.gp" nowrap>{{ game.gp }}</td><td v-else>0</td>
               <td v-if="game.attack && game.attack.k" nowrap>{{ game.attack.k }}</td><td v-else>0</td>
               <td v-if="game.attack && game.attack.e" nowrap>{{ game.attack.e }}</td><td v-else>0</td>
@@ -123,6 +130,7 @@
               <th>TOTALS:</th>
               <th>&nbsp;</th>
               <th>{{ totals.result.win }}-{{ totals.result.lose }}</th>
+              <th>{{ totals.ms }}</th>
               <th>{{ totals.gp }}</th>
               <th>{{ totals.attack.k }}</th>
               <th>{{ totals.attack.e }}</th>
@@ -243,6 +251,7 @@ export default {
         console.log('gamesByYear', gamesByYear)
         const gamesTotalByYear = {
           schedule_year: years[i],
+          ms: this.getMS(gamesByYear),
           gp: this.getGP(gamesByYear),
           result: {
             win: this.getWinGame(gamesByYear),
@@ -283,6 +292,7 @@ export default {
     calCareerTotals () {
       if (this.totalsByYear) {
         this.careerTotals = {
+          ms: this.getMS(this.totalsByYear),
           gp: this.getGP(this.totalsByYear),
           attack: {
             k: this.calTotal(this.totalsByYear, 'attack', 'k'),
@@ -312,6 +322,15 @@ export default {
           }
         }
       }
+    },
+    getMS (games) {
+      let total = 0
+      for (let i = 0; i < games.length; i++) {
+        if (games[i] && games[i].ms) {
+          total += games[i].ms - 0
+        }
+      }
+      return total
     },
     getGP (games) {
       let total = 0
