@@ -5,6 +5,9 @@
       <table class="table-striped table-sm table-condensed table table-hover table-bordered total_up">
         <thead>
           <tr>
+            <th colspan="17">Career & Season Stats</th>
+          </tr>
+          <tr>
             <th>Year</th>
             <th>MS</th>
             <th>S</th>
@@ -68,10 +71,13 @@
     </div>
 
     <div v-for="(year, index) in gameYears" :key="index">
-      <h1> {{ year }} </h1>
+      <!-- <h1> {{ year }} </h1> -->
       <div class="table-responsive mt-3">
         <table class=" table-striped table-sm table-condensed table table-hover table-bordered total_up">
           <thead>
+            <tr>
+              <th colspan="19">{{ year }} Games</th>
+            </tr>
             <tr>
               <th>Opponent</th>
               <th>Date</th>
@@ -175,7 +181,6 @@ export default {
         'Nov.', // "November",
         'Dec.' // "December",
       ],
-      playerNid: 1285416,
       games: [],
       totalsByYear: [],
       careerTotals: [],
@@ -199,8 +204,8 @@ export default {
       const data = this.gamesRecordPlayerIn
       for (var i = 0; i < data.length; i++) {
         // x.id === 'BYU' or x.name === 'BYU' or x.name === 'BY'
-        const byuTeamIndex = data[i].vbgame.team.findIndex(x => (x.name === 'BYU' | x.name === 'BY' | x.id === 'BYU')) // find index in array
-        const oppoTeamIndex = data[i].vbgame.team.findIndex(x => x.name !== 'BYU') // find index in array
+        const byuTeamIndex = data[i].vbgame.team.findIndex(x => x.id === 'BYU') // find index in array
+        const oppoTeamIndex = data[i].vbgame.team.findIndex(x => x.id !== 'BYU') // find index in array
         const byuTeamStat = data[i].vbgame.team[byuTeamIndex]
         const playerIndex = byuTeamStat.player.findIndex(x => x.player_nid === this.selected.athleteNid - 0)
         const playerStat = byuTeamStat.player[playerIndex]
@@ -226,6 +231,7 @@ export default {
       }
       // ===== Order the games' year for table order =====
       this.gameYears.sort()
+      this.gameYears.reverse()
       this.games = this.gamesRecordPlayerInCleared
       this.calTotalsByYear(this.gameYears)
       console.log('selected', this.selected)
@@ -240,15 +246,22 @@ export default {
       return dateStr
     },
     gamesFilterEventsByYear (year) {
-      return this.games.filter(game => game.schedule_year === year)
+      return this.games.filter(game => game.schedule_year === year).sort(this.dateSort)
+    },
+    dateSort (a, b) {
+      if (a.event_date < b.event_date) {
+        return -1
+      }
+      if (a.event_date > b.event_date) {
+        return 1
+      }
+      return 0
     },
     calTotalsByYear (years) {
       // clear old data
       this.totalsByYear = []
       for (let i = 0; i < years.length; i++) {
         const gamesByYear = this.gamesFilterEventsByYear(years[i])
-        console.log('year', years[i])
-        console.log('gamesByYear', gamesByYear)
         const gamesTotalByYear = {
           schedule_year: years[i],
           ms: this.getMS(gamesByYear),

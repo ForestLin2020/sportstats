@@ -103,7 +103,19 @@
       />
       <VolleyballAthlete
         ref="myVolleyball"
-        v-if="selected.sport == '1706'"
+        v-if="selected.sport == '1706' | selected.sport == '1716'"
+        :selected="selected"
+        :gamesRecordPlayerIn="gamesRecordPlayerIn"
+      />
+      <BaseballAthlete
+        ref="myBaseball"
+        v-if="selected.sport == '1698'"
+        :selected="selected"
+        :gamesRecordPlayerIn="gamesRecordPlayerIn"
+      />
+      <SoccerAthlete
+        ref="mySoccer"
+        v-if="selected.sport == '1711'"
         :selected="selected"
         :gamesRecordPlayerIn="gamesRecordPlayerIn"
       />
@@ -115,6 +127,8 @@
 <script>
 import FootballAthlete from '@/components/FootballAthlete.vue'
 import VolleyballAthlete from '@/components/VolleyballAthlete.vue'
+import BaseballAthlete from '@/components/BaseballAthlete.vue'
+import SoccerAthlete from '@/components/SoccerAthlete.vue'
 
 export default {
   name: 'Query',
@@ -139,7 +153,9 @@ export default {
   },
   components: {
     FootballAthlete,
-    VolleyballAthlete
+    VolleyballAthlete,
+    BaseballAthlete,
+    SoccerAthlete
   },
   methods: {
     async getData () {
@@ -155,8 +171,10 @@ export default {
       console.log('selected', this.selected)
       console.log('gamesRecordPlayerIn', this.gamesRecordPlayerIn)
       // call child function to clear or reorganize the data
+      if (this.selected.sport === '1698') this.$refs.myBaseball.reorganizeGames()
       if (this.selected.sport === '1701') this.$refs.myFootball.reorganizeGames()
-      if (this.selected.sport === '1706') this.$refs.myVolleyball.reorganizeGames()
+      if (this.selected.sport === '1711') this.$refs.mySoccer.reorganizeGames()
+      if (this.selected.sport === '1706' | this.selected.sport === '1716') this.$refs.myVolleyball.reorganizeGames()
       this.statsExist()
     },
     statsExist () {

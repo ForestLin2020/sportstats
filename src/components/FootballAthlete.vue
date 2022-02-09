@@ -13,11 +13,11 @@
 </template>
 
 <script>
-import Quarterback from '@/components/football_position/Quarterback.vue'
-import OffensiveLine from '@/components/football_position/OffensiveLine.vue'
-import Offensive from '@/components/football_position/Offensive.vue'
-import Defensive from '@/components/football_position/Defensive.vue'
-import KickerPunter from '@/components/football_position/KickerPunter.vue'
+import Quarterback from '@/components/football_tables/Quarterback.vue'
+import OffensiveLine from '@/components/football_tables/OffensiveLine.vue'
+import Offensive from '@/components/football_tables/Offensive.vue'
+import Defensive from '@/components/football_tables/Defensive.vue'
+import KickerPunter from '@/components/football_tables/KickerPunter.vue'
 
 export default {
   name: 'FootballAthlete',
@@ -65,8 +65,8 @@ export default {
       const data = this.gamesRecordPlayerIn
       for (var i = 0; i < data.length; i++) {
         // x.id === 'BYU' or x.name === 'BYU' or x.name === 'BY'
-        const byuTeamIndex = data[i].fbgame.team.findIndex(x => (x.name === 'BYU' | x.name === 'BY' | x.id === 'BYU')) // find index in array
-        const oppoTeamIndex = data[i].fbgame.team.findIndex(x => x.name !== 'BYU') // find index in array
+        const byuTeamIndex = data[i].fbgame.team.findIndex(x => x.id === 'BYU') // find index in array
+        const oppoTeamIndex = data[i].fbgame.team.findIndex(x => x.id !== 'BYU') // find index in array
         const byuTeamStat = data[i].fbgame.team[byuTeamIndex]
         const playerIndex = byuTeamStat.player.findIndex(x => x.player_nid === this.selected.athleteNid - 0)
         const playerStat = byuTeamStat.player[playerIndex]
@@ -101,6 +101,8 @@ export default {
       }
       // ===== Order the games' year for table order =====
       this.gameYears.sort()
+      this.gameYears.reverse()
+
       // ===== Determine the table type for player =====
       for (var j = 0; j < this.playerPositions.length; j++) {
         // QB_table

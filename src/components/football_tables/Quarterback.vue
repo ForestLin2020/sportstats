@@ -3,7 +3,7 @@
   <div class="career-and-season">
     <div class="table-responsive">
       <table class="table-striped table-sm table-condensed table table-hover table-bordered total_up">
-        <thead class='football-thead'>
+        <thead>
           <tr>
             <th colspan="2">Career</th>
             <th colspan="9">Passing</th>
@@ -86,7 +86,7 @@
     <div v-for="(year, index) in gameYears" :key="index">
       <div class="table-responsive mt-3">
         <table class=" table-striped table-sm table-condensed table table-hover table-bordered total_up">
-          <thead class='football-thead'>
+          <thead>
             <tr>
               <th colspan="3">{{ year }} Games</th>
               <th colspan="9">Passing</th>
@@ -193,7 +193,7 @@ export default {
         'Feb.', // "February",
         'Mar.', // "March",
         'Apr.', // "April",
-        'May"', // "May",
+        'May.', // "May",
         'Jun.', // "June",
         'Jul.', // "July",
         'Aug.', // "August",
@@ -202,9 +202,7 @@ export default {
         'Nov.', // "November",
         'Dec.' // "December",
       ],
-      playerNid: 1285416,
       games: [],
-      // gameYears: [],
       totalsByYear: [],
       careerTotals: []
     }
@@ -228,7 +226,16 @@ export default {
       return dateStr
     },
     gamesFilterEventsByYear (year) {
-      return this.games.filter(game => game.schedule_year === year)
+      return this.games.filter(game => game.schedule_year === year).sort(this.dateSort)
+    },
+    dateSort (a, b) {
+      if (a.event_date < b.event_date) {
+        return -1
+      }
+      if (a.event_date > b.event_date) {
+        return 1
+      }
+      return 0
     },
     calTotalsByYear (years) {
       for (let i = 0; i < years.length; i++) {
@@ -378,7 +385,7 @@ export default {
 
 <style scoped>
 
-.football-thead {
+thead {
   color: white;
   background: #0b5ed7;
 }
