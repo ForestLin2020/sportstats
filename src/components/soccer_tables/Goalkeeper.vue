@@ -43,12 +43,13 @@
         <table class=" table-striped table-sm table-condensed table table-hover table-bordered total_up">
           <thead>
             <tr>
-              <th colspan="6">{{ year }} Games</th>
+              <th colspan="7">{{ year }} Games</th>
             </tr>
             <tr>
               <th>Opponent</th>
               <th>Date</th>
               <th>Result</th>
+              <th>GS</th>
               <th>GA</th>
               <th>Sav</th>
               <th>Min</th>
@@ -63,6 +64,11 @@
               <td nowrap v-if="(game.byu_score - 0) > (game.opp_score - 0)"><b style="color: green">W </b> {{ game.byu_score }}-{{ game.opp_score }}</td>
               <td nowrap v-if="(game.byu_score - 0) == (game.opp_score - 0)"><b style="color: blue">T </b> {{ game.byu_score }}-{{ game.opp_score }}</td>
               <td nowrap v-if="(game.byu_score - 0) < (game.opp_score - 0)"><b style="color: red">L </b> {{ game.byu_score }}-{{ game.opp_score }}</td>
+              <td v-if="game.gs == '1'">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
+                  <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+                </svg>
+              </td><td v-else></td>
               <td v-if="game.goalie && game.goalie.ga" nowrap>{{ game.goalie.ga }}</td><td v-else>0</td>
               <td v-if="game.goalie && game.goalie.saves" nowrap>{{ game.goalie.saves }}</td><td v-else>0</td>
               <td v-if="game.misc && game.misc.minutes" nowrap>{{ game.misc.minutes }}</td><td v-else>0</td>
@@ -71,6 +77,7 @@
               <th>TOTALS:</th>
               <th>&nbsp;</th>
               <th>{{ totals.result.win }}-{{ totals.result.lose }}</th>
+              <th>{{ totals.gs }}</th>
               <th>{{ totals.goalie.ga }}</th>
               <th>{{ totals.goalie.saves }}</th>
               <th>{{ totals.misc.minutes }}</th>
@@ -113,9 +120,6 @@ export default {
     // do something
   },
   mounted () {
-    console.log('selected', this.selected)
-    console.log('gamesRecordPlayerInCleared', this.gamesRecordPlayerInCleared)
-    console.log('gameYears', this.gameYears)
     this.games = this.gamesRecordPlayerInCleared
     this.calTotalsByYear(this.gameYears)
   },

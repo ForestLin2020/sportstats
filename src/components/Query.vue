@@ -144,7 +144,7 @@ export default {
         coachNid: undefined
       },
       athletes: [],
-      gamesRecordPlayerIn: null,
+      gamesRecordPlayerIn: null, // disable and enable the submit button
       games: [],
       coaches: [],
       years: [],
@@ -159,6 +159,8 @@ export default {
   },
   methods: {
     async getData () {
+      // clear old data and disable the submit button when data is not received.
+      this.gamesRecordPlayerIn = null
       if (this.selected.athleteNid) {
         // ======= fetch from URL API =======
         const athletesUrl = `https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/athlete/${this.selected.sport}/${this.selected.athleteNid}`
@@ -175,7 +177,7 @@ export default {
       if (this.selected.sport === '1701') this.$refs.myFootball.reorganizeGames()
       if (this.selected.sport === '1711') this.$refs.mySoccer.reorganizeGames()
       if (this.selected.sport === '1706' | this.selected.sport === '1716') this.$refs.myVolleyball.reorganizeGames()
-      this.statsExist()
+      this.statsExist() // show info if there is no stats for player
     },
     statsExist () {
       if (this.gamesRecordPlayerIn.length === 0) {
@@ -190,7 +192,11 @@ export default {
       const res = await fetch(yearsUrl)
       const data = await res.json()
       this.years = data
+      // clear category option if sport change
       this.selected.category = undefined
+      this.selected.athleteNid = undefined
+      // clear gamesRecordPlayerIn array if sport change and disable the submit button
+      this.gamesRecordPlayerIn = null
       // console.log('years', this.years)
     },
     async getAthleteOrGamesOrCoach () {

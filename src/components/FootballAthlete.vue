@@ -5,10 +5,26 @@
       :selected="selected"
       :gamesRecordPlayerInCleared="gamesRecordPlayerInCleared"
       :gameYears="gameYears"/>
-    <OffensiveLine v-if="type == 'OL_table'" />
-    <Offensive v-if="type == 'Offensive_table'" />
-    <Defensive v-if="type == 'Defensive_table'" />
-    <KickerPunter v-if="type == 'KP_table'" />
+    <OffensiveLine
+      v-if="type == 'OL_table'"
+      :selected="selected"
+      :gamesRecordPlayerInCleared="gamesRecordPlayerInCleared"
+      :gameYears="gameYears"/>
+    <Offensive
+      v-if="type == 'Offensive_table'"
+      :selected="selected"
+      :gamesRecordPlayerInCleared="gamesRecordPlayerInCleared"
+      :gameYears="gameYears"/>
+    <Defensive
+      v-if="type == 'Defensive_table'"
+      :selected="selected"
+      :gamesRecordPlayerInCleared="gamesRecordPlayerInCleared"
+      :gameYears="gameYears"/>
+    <KickerPunter
+      v-if="type == 'KP_table'"
+      :selected="selected"
+      :gamesRecordPlayerInCleared="gamesRecordPlayerInCleared"
+      :gameYears="gameYears"/>
   </div>
 </template>
 
@@ -38,7 +54,7 @@ export default {
       RB: ['RB', 'FB', 'HB'],
       // Defensive_table >> LB, DB, DL are all the same table type
       DB: ['CB', 'FS', 'SS', 'DB', 'RC', 'RCB', 'LC', 'LCB'],
-      LB: ['MLB', 'OLB', 'Nick', 'ILB', 'WLB'],
+      LB: ['MLB', 'OLB', 'Nick', 'ILB', 'WLB', 'LB'],
       DL: ['DL', 'NT', 'DT', 'DE', 'edge'],
       // KP_table >> Special Teams
       K: ['K', 'kicker'],
@@ -90,7 +106,7 @@ export default {
           this.playerPositions.push(playerStat.opos)
         } else if (playerStat.dpos && this.playerPositions.indexOf(playerStat.dpos) === -1) {
           this.playerPositions.push(playerStat.dpos)
-        } else if (playerStat.punt || playerStat.pat || playerStat.ko) {
+        } else if (playerStat.punt || playerStat.ko || playerStat.fg) {
           this.playerPositions.push('KP') // punter and kicker at the sametime
         }
 

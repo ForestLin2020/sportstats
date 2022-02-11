@@ -211,9 +211,6 @@ export default {
     // do something
   },
   mounted () {
-    console.log('selected', this.selected)
-    console.log('gamesRecordPlayerInCleared', this.gamesRecordPlayerInCleared)
-    console.log('gameYears', this.gameYears)
     this.games = this.gamesRecordPlayerInCleared
     this.calTotalsByYear(this.gameYears)
   },
