@@ -20,15 +20,15 @@
 <script>
 import Query from '@/components/Query.vue'
 // https://byucougars.byu-dept-athletics-dev.amazon.byu.edu/feeds/sport-years/sport_nid
-// https://byucougars.byu-dept-athletics-dev.amazon.byu.edu/feeds/sport-years/1701
+// Ex: https://byucougars.byu-dept-athletics-dev.amazon.byu.edu/feeds/sport-years/1701
 const tempYearsUrl = 'https://byucougars.byu-dept-athletics-dev.amazon.byu.edu/feeds/sport-years'
 
 // https://byucougars.com/feeds/athlete/year/sport_nid/year
-// https://byucougars.com/feeds/athlete/year/1698/2014
+// Ex: https://byucougars.com/feeds/athlete/year/1698/2014
 const tempAthletesUrl = 'https://byucougars.com/feeds/athlete/year'
 
 // https://byucougars.com/feeds/game/year/sport_nid/year
-// https://byucougars.com/feeds/game/year/1698/2014
+// Ex: https://byucougars.com/feeds/game/year/1698/2014
 const tempGamesUrl = 'https://byucougars.com/feeds/game/year'
 const tempCoachUrl = 'https://byucougars.com/feeds/coach/year'
 

@@ -25,6 +25,11 @@
       :selected="selected"
       :gamesRecordPlayerInCleared="gamesRecordPlayerInCleared"
       :gameYears="gameYears"/>
+    <KickRePuntRe
+      v-if="type == 'KrPr_table'"
+      :selected="selected"
+      :gamesRecordPlayerInCleared="gamesRecordPlayerInCleared"
+      :gameYears="gameYears"/>
   </div>
 </template>
 
@@ -34,6 +39,7 @@ import OffensiveLine from '@/components/football_tables/OffensiveLine.vue'
 import Offensive from '@/components/football_tables/Offensive.vue'
 import Defensive from '@/components/football_tables/Defensive.vue'
 import KickerPunter from '@/components/football_tables/KickerPunter.vue'
+import KickRePuntRe from '@/components/football_tables/KickRePuntRe.vue'
 
 export default {
   name: 'FootballAthlete',
@@ -44,21 +50,16 @@ export default {
       tableTypes: [],
       gamesRecordPlayerInCleared: [],
       gameYears: [],
-      // QB_table
-      QB: ['QB'],
-      // OL_table
-      OL: ['OL', 'RG', 'LG', 'RT', 'LT', 'C'],
-      // Offensive_table >> WR, RB, and TE are the same table type
-      TE: ['TE'],
-      WR: ['WR', 'slot'],
-      RB: ['RB', 'FB', 'HB'],
-      // Defensive_table >> LB, DB, DL are all the same table type
-      DB: ['CB', 'FS', 'SS', 'DB', 'RC', 'RCB', 'LC', 'LCB'],
-      LB: ['MLB', 'OLB', 'Nick', 'ILB', 'WLB', 'LB'],
-      DL: ['DL', 'NT', 'DT', 'DE', 'edge'],
-      // KP_table >> Special Teams
-      K: ['K', 'kicker'],
-      P: ['P']
+      // Quarterback table
+      QB_table: ['QB'],
+      // Offensive Line table
+      OL_table: ['OL', 'RG', 'LG', 'RT', 'LT', 'C'],
+      // Offensive table >> WR, RB, and TE are the same table type
+      Offensive_table: ['TE', 'WR', 'slot', 'RB', 'FB', 'HB'],
+      // Defensive table >> LB, DB, DL are all the same table type
+      Defensive_table: ['DB', 'CB', 'FS', 'SS', 'DB', 'RC', 'RCB', 'LC', 'LCB', 'MLB', 'OLB', 'Nick', 'ILB', 'WLB', 'LB', 'DL', 'NT', 'DT', 'DE', 'edge'],
+      // Kicker Punter table
+      KP_table: ['KP', 'K', 'kicker', 'P']
     }
   },
   components: {
@@ -66,7 +67,8 @@ export default {
     OffensiveLine,
     Defensive,
     Offensive,
-    KickerPunter
+    KickerPunter,
+    KickRePuntRe
   },
   methods: {
     reorganizeGames () {
@@ -101,12 +103,39 @@ export default {
         playerStat.byu_score = data[i].fbgame.team[byuTeamIndex].linescore.score
         this.gamesRecordPlayerInCleared.push(playerStat)
 
-        // ===== Determine player position =====
+        // (1)KP >> (2)QB >> (3)Offensive >> (4)Defensive >> (5)OL
+        if ((playerStat.punt || playerStat.ko || playerStat.fg) && this.tableTypes.indexOf('KP_table') === -1) {
+          this.tableTypes.push('KP_table')
+        } else if ((playerStat.pr || playerStat.kr) && this.tableTypes.indexOf('KrPr_table') === -1) {
+          this.tableTypes.push('KrPr_table')
+        } else if (((playerStat.rcv && playerStat.rush && playerStat.pass) || this.QB_table.includes(playerStat.opos) !== false) && (this.tableTypes.indexOf('QB_table') === -1)) {
+          this.tableTypes.push('QB_table')
+        } else if (((playerStat.rcv || playerStat.rush || playerStat.fumbles) && (this.tableTypes.indexOf('Offensive_table') === -1))) {
+          //  && (this.Offensive_table.includes(playerStat.opos) !== false)
+          this.tableTypes.push('Offensive_table') // WR, RB, and TE are the same table type >> Offensive_table
+        } else if ((playerStat.defense || playerStat.ir) && this.tableTypes.indexOf('Defensive_table') === -1) {
+          //  && (this.Defensive_table.includes(playerStat.dpos) !== false)
+          this.tableTypes.push('Defensive_table') // LB, DB, DL are all the same table type >> Defensive_table
+        } else if ((playerStat.gp === '1' || this.OL_table.includes(playerStat.opos) !== false) && this.tableTypes.indexOf('OL_table') === -1) {
+          if (!playerStat.defense && !playerStat.ir && !playerStat.rcv && !playerStat.ruch && !playerStat.fumbles) {
+            this.tableTypes.push('OL_table')
+            console.log(i)
+            console.log(playerStat.event_date)
+            console.log(!playerStat.defense)
+            console.log(!playerStat.ir)
+            console.log(!playerStat.rcv)
+            console.log(!playerStat.rush)
+            console.log(!playerStat.fumbles)
+          }
+        }
+
+        // ===== First if: Determine player position -> add position, playerStat.opos='WR'=====
+        // ===== Second if: Whether this player in this position do some contribution -> adding table type =====
         if (playerStat.opos && this.playerPositions.indexOf(playerStat.opos) === -1) {
           this.playerPositions.push(playerStat.opos)
         } else if (playerStat.dpos && this.playerPositions.indexOf(playerStat.dpos) === -1) {
           this.playerPositions.push(playerStat.dpos)
-        } else if (playerStat.punt || playerStat.ko || playerStat.fg) {
+        } else if ((playerStat.punt || playerStat.ko || playerStat.fg) && this.playerPositions.indexOf('KP') === -1) {
           this.playerPositions.push('KP') // punter and kicker at the sametime
         }
 
@@ -118,24 +147,6 @@ export default {
       // ===== Order the games' year for table order =====
       this.gameYears.sort()
       this.gameYears.reverse()
-
-      // ===== Determine the table type for player =====
-      for (var j = 0; j < this.playerPositions.length; j++) {
-        // QB_table
-        if (this.QB.includes(this.playerPositions[j]) & this.tableTypes.indexOf('QB_table') === -1) this.tableTypes.push('QB_table')
-        // OL_table
-        if (this.OL.includes(this.playerPositions[j]) & this.tableTypes.indexOf('OL_table') === -1) this.tableTypes.push('OL_table')
-        // WR, RB, and TE are the same table type >> Offensive_table
-        if (this.WR.includes(this.playerPositions[j]) & this.tableTypes.indexOf('Offensive_table') === -1) this.tableTypes.push('Offensive_table')
-        if (this.TE.includes(this.playerPositions[j]) & this.tableTypes.indexOf('Offensive_table') === -1) this.tableTypes.push('Offensive_table')
-        if (this.RB.includes(this.playerPositions[j]) & this.tableTypes.indexOf('Offensive_table') === -1) this.tableTypes.push('Offensive_table')
-        // LB, DB, DL are all the same table type >> Defensive_table
-        if (this.LB.includes(this.playerPositions[j]) & this.tableTypes.indexOf('Defensive_table') === -1) this.tableTypes.push('Defensive_table')
-        if (this.DB.includes(this.playerPositions[j]) & this.tableTypes.indexOf('Defensive_table') === -1) this.tableTypes.push('Defensive_table')
-        if (this.DL.includes(this.playerPositions[j]) & this.tableTypes.indexOf('Defensive_table') === -1) this.tableTypes.push('Defensive_table')
-        // Special Teams >> 'KP_table'
-        if (this.playerPositions[j] === 'KP' & this.tableTypes.indexOf('KP_table') === -1) this.tableTypes.push('KP_table')
-      }
 
       console.log('gamesRecordPlayerInCleared', this.gamesRecordPlayerInCleared)
       console.log('playerPositions', this.playerPositions)

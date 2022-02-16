@@ -2,10 +2,8 @@
 <header>
   <div id="nav">
     <img class="y-logo" alt="BYU logo" src="https://byucougars.com/themes/Cougar/byu.png">
-    <!-- <div class="menu-item"></div> -->
-    <div class="menu-item"><router-link to="/">Home</router-link></div>
+    <div class="menu-item"><router-link to="/">Statistics</router-link></div>
     <div class="menu-item"><router-link to="/about">About</router-link></div>
-    <div class="menu-item"><router-link to="/statistics">Statistics</router-link></div>
   </div>
 </header>
 <div class="router-view">
@@ -21,19 +19,6 @@
   text-align: center;
   color: #2c3e50;
 }
-
-/* #nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-} */
 
 header {
   width: 100%;
