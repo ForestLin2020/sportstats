@@ -202,7 +202,6 @@ export default {
         'Nov.', // "November",
         'Dec.' // "December",
       ],
-      games: [],
       totalsByYear: [],
       careerTotals: []
     }
@@ -211,8 +210,7 @@ export default {
     // do something
   },
   mounted () {
-    this.games = this.gamesRecordPlayerInCleared
-    this.calTotalsByYear(this.gameYears)
+    this.calTotalsByYear()
   },
   methods: {
     formDateStr (str) {
@@ -223,7 +221,7 @@ export default {
       return dateStr
     },
     gamesFilterEventsByYear (year) {
-      return this.games.filter(game => game.schedule_year === year).sort(this.dateSort)
+      return this.gamesRecordPlayerInCleared.filter(game => game.schedule_year === year).sort(this.dateSort)
     },
     dateSort (a, b) {
       if (a.event_date < b.event_date) {
@@ -234,11 +232,11 @@ export default {
       }
       return 0
     },
-    calTotalsByYear (years) {
-      for (let i = 0; i < years.length; i++) {
-        const gamesByYear = this.gamesFilterEventsByYear(years[i])
+    calTotalsByYear () {
+      for (let i = 0; i < this.gameYears.length; i++) {
+        const gamesByYear = this.gamesFilterEventsByYear(this.gameYears[i])
         const gamesTotalByYear = {
-          schedule_year: years[i],
+          schedule_year: this.gameYears[i],
           gp: this.getGP(gamesByYear),
           result: {
             win: this.getWinGame(gamesByYear),

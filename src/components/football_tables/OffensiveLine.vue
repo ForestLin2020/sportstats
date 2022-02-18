@@ -98,7 +98,6 @@ export default {
         'Nov.', // "November",
         'Dec.' // "December",
       ],
-      // games: [],
       totalsByYear: [],
       careerTotals: []
     }
@@ -107,9 +106,7 @@ export default {
     // do something here
   },
   mounted () {
-    // this.games = this.gamesRecordPlayerInCleared
     this.calTotalsByYear()
-    console.log('gamesRecordPlayerInCleared in OL table', this.gamesRecordPlayerInCleared)
   },
   methods: {
     formDateStr (str) {
