@@ -87,7 +87,7 @@
             <button
               id="submit"
               type="submit"
-              :disabled="gamesRecordPlayerIn === null"
+              :disabled="gamesRecordPlayerIn === null || gamesRecord === null"
               class="btn btn-outline-primary"
               @click="submit"
               >Submit
@@ -161,12 +161,21 @@ export default {
     async getData () {
       // clear old data and disable the submit button when data is not received.
       this.gamesRecordPlayerIn = null
+      this.gamesRecord = null
+
       if (this.selected.athleteNid) {
         // ======= fetch from URL API =======
         const athletesUrl = `https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/athlete/${this.selected.sport}/${this.selected.athleteNid}`
         const res = await fetch(athletesUrl)
         const data = await res.json()
         this.gamesRecordPlayerIn = data
+      }
+
+      if (this.selected.gameNid) {
+        const gamesUrl = `https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/boxscore/${this.selected.sport}/${this.selected.gameNid}`
+        const res = await fetch(gamesUrl)
+        const data = await res.json()
+        this.gamesRecord = data
       }
     },
     submit () {
