@@ -3,31 +3,38 @@
     <Quarterback
       v-if="type == 'QB_table'"
       :selected="selected"
+      v-bind:key="selected.athleteNid"
       :gamesRecordPlayerInCleared="gamesRecordPlayerInCleared"
       :gameYears="gameYears"/>
     <OffensiveLine
+      ref="myTable"
       v-if="type == 'OL_table'"
       :selected="selected"
+      v-bind:key="selected.athleteNid"
       :gamesRecordPlayerInCleared="gamesRecordPlayerInCleared"
       :gameYears="gameYears"/>
     <Offensive
       v-if="type == 'Offensive_table'"
       :selected="selected"
+      :key="selected.athleteNid"
       :gamesRecordPlayerInCleared="gamesRecordPlayerInCleared"
       :gameYears="gameYears"/>
     <Defensive
       v-if="type == 'Defensive_table'"
       :selected="selected"
+      v-bind:key="selected.athleteNid"
       :gamesRecordPlayerInCleared="gamesRecordPlayerInCleared"
       :gameYears="gameYears"/>
     <KickerPunter
       v-if="type == 'KP_table'"
       :selected="selected"
+      v-bind:key="selected.athleteNid"
       :gamesRecordPlayerInCleared="gamesRecordPlayerInCleared"
       :gameYears="gameYears"/>
-    <KickRePuntRe
+    <Return
       v-if="type == 'KrPr_table'"
       :selected="selected"
+      v-bind:key="selected.athleteNid"
       :gamesRecordPlayerInCleared="gamesRecordPlayerInCleared"
       :gameYears="gameYears"/>
   </div>
@@ -39,13 +46,14 @@ import OffensiveLine from '@/components/football_tables/OffensiveLine.vue'
 import Offensive from '@/components/football_tables/Offensive.vue'
 import Defensive from '@/components/football_tables/Defensive.vue'
 import KickerPunter from '@/components/football_tables/KickerPunter.vue'
-import KickRePuntRe from '@/components/football_tables/KickRePuntRe.vue'
+import Return from '@/components/football_tables/Return.vue'
 
 export default {
   name: 'FootballAthlete',
   props: ['selected', 'gamesRecordPlayerIn'],
   data () {
     return {
+      uniqueKey: 0,
       playerPositions: [],
       tableTypes: [],
       gamesRecordPlayerInCleared: [],
@@ -68,7 +76,7 @@ export default {
     Defensive,
     Offensive,
     KickerPunter,
-    KickRePuntRe
+    Return
   },
   methods: {
     reorganizeGames () {
@@ -119,13 +127,13 @@ export default {
         } else if ((playerStat.gp === '1' || this.OL_table.includes(playerStat.opos) !== false) && this.tableTypes.indexOf('OL_table') === -1) {
           if (!playerStat.defense && !playerStat.ir && !playerStat.rcv && !playerStat.ruch && !playerStat.fumbles) {
             this.tableTypes.push('OL_table')
-            console.log(i)
-            console.log(playerStat.event_date)
-            console.log(!playerStat.defense)
-            console.log(!playerStat.ir)
-            console.log(!playerStat.rcv)
-            console.log(!playerStat.rush)
-            console.log(!playerStat.fumbles)
+            // console.log(i)
+            // console.log(playerStat.event_date)
+            // console.log(!playerStat.defense)
+            // console.log(!playerStat.ir)
+            // console.log(!playerStat.rcv)
+            // console.log(!playerStat.rush)
+            // console.log(!playerStat.fumbles)
           }
         }
 
@@ -148,7 +156,7 @@ export default {
       this.gameYears.sort()
       this.gameYears.reverse()
 
-      console.log('gamesRecordPlayerInCleared', this.gamesRecordPlayerInCleared)
+      console.log('gamesRecordPlayerInCleared in FA', this.gamesRecordPlayerInCleared)
       console.log('playerPositions', this.playerPositions)
       console.log('tableTypes', this.tableTypes)
       console.log('gameYears', this.gameYears)

@@ -97,25 +97,25 @@
       </div>
       <FootballAthlete
         ref="myFootball"
-        v-if="selected.sport == '1701'"
+        v-if="selected.sport == '1701' && gamesRecordPlayerIn"
         :selected="selected"
         :gamesRecordPlayerIn="gamesRecordPlayerIn"
       />
       <VolleyballAthlete
         ref="myVolleyball"
-        v-if="selected.sport == '1706' | selected.sport == '1716'"
+        v-if="(selected.sport == '1706' | selected.sport == '1716') && gamesRecordPlayerIn"
         :selected="selected"
         :gamesRecordPlayerIn="gamesRecordPlayerIn"
       />
       <BaseballAthlete
         ref="myBaseball"
-        v-if="selected.sport == '1698'"
+        v-if="selected.sport == '1698' && gamesRecordPlayerIn"
         :selected="selected"
         :gamesRecordPlayerIn="gamesRecordPlayerIn"
       />
       <SoccerAthlete
         ref="mySoccer"
-        v-if="selected.sport == '1711'"
+        v-if="selected.sport == '1711' && gamesRecordPlayerIn"
         :selected="selected"
         :gamesRecordPlayerIn="gamesRecordPlayerIn"
       />
@@ -171,7 +171,7 @@ export default {
     },
     submit () {
       console.log('selected', this.selected)
-      console.log('gamesRecordPlayerIn', this.gamesRecordPlayerIn)
+      // console.log('gamesRecordPlayerIn', this.gamesRecordPlayerIn)
       // call child function to clear or reorganize the data
       if (this.selected.sport === '1698') this.$refs.myBaseball.reorganizeGames()
       if (this.selected.sport === '1701') this.$refs.myFootball.reorganizeGames()
