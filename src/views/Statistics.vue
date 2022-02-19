@@ -1,5 +1,5 @@
 <template>
-  <div class="stats">
+  <div class="stats mb-5">
     <query
       :tempAthletesUrl="tempAthletesUrl"
       :tempGamesUrl="tempGamesUrl"

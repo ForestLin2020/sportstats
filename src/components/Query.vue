@@ -8,7 +8,7 @@
         <div class="col-sm">
           <div class="form-group">
             <label>Sport</label>
-            <select class="form-select" v-model="selected.sport" @change="getYears()">
+            <select class="form-select" v-model="selected.sport" @change="getYears(); changeSportClear();">
               <option value="1698">Baseball</option>
               <option value="1699">Men's Basketball</option>
               <option value="1707">Women's Basketball</option>
@@ -54,7 +54,7 @@
           </div>
         </div>
 
-        <div v-if="selected.category==='athlete'" @change="getData" class="col-sm">
+        <div v-if="selected.category==='athlete'" @change="changeAthleteGameCoachClear(); getData();" class="col-sm">
           <div class="form-group">
             <label>Athlete</label>
             <select class="form-select" v-model="selected.athleteNid">
@@ -63,7 +63,7 @@
           </div>
         </div>
 
-        <div v-if="selected.category==='game'" @change="getData" class="col-sm">
+        <div v-if="selected.category==='game'" @change="changeAthleteGameCoachClear(); getData();" class="col-sm">
           <div class="form-group">
             <label>Game</label>
             <select class="form-select" v-model="selected.gameNid">
@@ -72,7 +72,7 @@
           </div>
         </div>
 
-        <div v-if="selected.category==='coach'" @change="getData" class="col-sm">
+        <div v-if="selected.category==='coach'" @change="changeAthleteGameCoachClear(); getData();" class="col-sm">
           <div class="form-group">
             <label>Coach</label>
             <select class="form-select" v-model="selected.coach">
@@ -88,7 +88,7 @@
             <button
               id="submit"
               type="submit"
-              :disabled="stats === null"
+              :disabled="!isBoxScoreTableReady && gamesRecordPlayerIn === null"
               class="btn btn-outline-primary"
               @click="submit"
               >Submit
@@ -120,7 +120,7 @@
         :selected="selected"
         :gamesRecordPlayerIn="gamesRecordPlayerIn"
       />
-      <VolleyballScoreBox
+      <VolleyballBoxScore
         v-if="(selected.sport == '1706' | selected.sport == '1716') && stats"
         :selected="selected"
         :stats="stats"
@@ -135,7 +135,7 @@ import FootballAthlete from '@/components/FootballAthlete.vue'
 import VolleyballAthlete from '@/components/VolleyballAthlete.vue'
 import BaseballAthlete from '@/components/BaseballAthlete.vue'
 import SoccerAthlete from '@/components/SoccerAthlete.vue'
-import VolleyballScoreBox from '@/components/VolleyballScoreBox.vue'
+import VolleyballBoxScore from '@/components/VolleyballBoxScore.vue'
 
 export default {
   name: 'Query',
@@ -153,7 +153,9 @@ export default {
       athletes: [],
       gamesRecordPlayerIn: null, // disable and enable the submit button
       stats: null,
+      isBoxScoreTableReady: false,
       games: [],
+      gameRecords: null,
       coaches: [],
       years: [],
       isStatsExist: true
@@ -164,14 +166,15 @@ export default {
     VolleyballAthlete,
     BaseballAthlete,
     SoccerAthlete,
-    VolleyballScoreBox
+    VolleyballBoxScore
   },
   methods: {
-    async getData () {
+    changeAthleteGameCoachClear () {
       // clear old data and disable the submit button when data is not received.
       this.gamesRecordPlayerIn = null
       this.stats = null
-
+    },
+    async getData () {
       if (this.selected.athleteNid) {
         // ======= fetch from URL API =======
         const athletesUrl = `https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/athlete/${this.selected.sport}/${this.selected.athleteNid}`
@@ -184,35 +187,44 @@ export default {
         const gamesUrl = `https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/boxscore/${this.selected.gameNid}`
         const res = await fetch(gamesUrl)
         const data = await res.json()
-        this.stats = data[0]
-        console.log('stats', this.stats)
+        this.gameRecords = data[0]
+        console.log('gameRecords', this.gameRecords)
+        this.isBoxScoreTableReady = true
       }
     },
     submit () {
-      console.log('selected', this.selected)
-      // console.log('gamesRecordPlayerIn', this.gamesRecordPlayerIn)
-      // call child function to clear or reorganize the data
+      // call child function to clear and reorganize the data, and then show table
       if (this.selected.sport === '1698' && this.selected.athleteNid) this.$refs.myBaseball.reorganizeGames()
       if (this.selected.sport === '1701' && this.selected.athleteNid) this.$refs.myFootball.reorganizeGames()
       if (this.selected.sport === '1711' && this.selected.athleteNid) this.$refs.mySoccer.reorganizeGames()
       if ((this.selected.sport === '1706' || this.selected.sport === '1716') && this.selected.athleteNid) this.$refs.myVolleyball.reorganizeGames()
-      this.statsExist() // show info if there is no stats for player
+      // show box score table
+      this.stats = this.gameRecords
+      // show info if there is no stats for player
+      this.statsExist()
+      console.log('selected', this.selected)
     },
     statsExist () {
-      if (this.gamesRecordPlayerIn) {
-        if (this.gamesRecordPlayerIn.length === 0) {
+      if (this.gamesRecordPlayerIn || this.stats) {
+        if (this.gamesRecordPlayerIn.length === 0 || this.stats.length === 0) {
           this.isStatsExist = false
-        } else if (this.gamesRecordPlayerIn.length !== 0) {
+        } else if (this.gamesRecordPlayerIn.length !== 0 || this.stats.length !== 0) {
           this.isStatsExist = true
         }
       }
-      if (this.stats) {
-        if (this.stats.length === 0) {
-          this.isStatsExist = false
-        } else if (this.stats.length !== 0) {
-          this.isStatsExist = true
-        }
-      }
+    },
+    changeSportClear () {
+      // clear category option if sport change
+      this.selected.category = undefined
+      this.selected.athleteNid = undefined
+      // clear gamesRecordPlayerIn array if sport change and disable the submit button
+      this.gamesRecordPlayerIn = null
+      // clear stats and gameRecords array if sport change and disable the submit button (isBoxScoreTableReady)
+      this.stats = null
+      this.gameRecords = null
+      this.isBoxScoreTableReady = false
+      // disable the stats checking table
+      this.isStatsExist = true
     },
     async getYears () {
       const yearsUrl = `${this.tempYearsUrl}/${this.selected.sport}`
@@ -220,12 +232,6 @@ export default {
       const res = await fetch(yearsUrl)
       const data = await res.json()
       this.years = data
-      // clear category option if sport change
-      this.selected.category = undefined
-      this.selected.athleteNid = undefined
-      // clear gamesRecordPlayerIn array if sport change and disable the submit button
-      this.gamesRecordPlayerIn = null
-      // console.log('years', this.years)
     },
     async getAthleteOrGamesOrCoach () {
       if (this.selected.category === 'athlete') {

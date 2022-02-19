@@ -1,10 +1,10 @@
 <template>
-  <h5>VolleyballScoreBox</h5>
+  <h2>Volleyball Box Score</h2>
   <div class="game-description" nowrap>
     <!-- 2017 Concordia Irvine -->
-    <h5 style="display:inline"><strong>Location:</strong> {{ stats.vbgame.venue.location }} </h5>
-    <h5 style="display:inline"><strong v-if="stats.vbgame.venue.time">Time:</strong> {{ stats.vbgame.venue.time }} <strong>Date:</strong> {{ stats.vbgame.venue.date }} </h5>
-    <h5 style="display:inline"><strong>Attendance:</strong> {{ stats.vbgame.venue.attend }} </h5>
+    <h6 style="text-align:left;"><strong v-if="stats.vbgame.venue.location">Location:</strong> {{ stats.vbgame.venue.location }} </h6>
+    <h6 style="text-align:left;"><strong v-if="stats.vbgame.venue.time">Time:</strong> {{ stats.vbgame.venue.time }} <strong>Date:</strong> {{ stats.vbgame.venue.date }} </h6>
+    <h6 style="text-align:left;"><strong v-if="stats.vbgame.venue.attend">Attendance:</strong> {{ stats.vbgame.venue.attend }} </h6>
   </div>
 
   <div class="table-responsive">
@@ -41,7 +41,7 @@
   </div>
 
   <div v-for="(i, teamIndex) in 2" :key="teamIndex">
-    <h3>{{stats.vbgame.team[teamIndex].name}} <small>{{stats.vbgame.team[teamIndex].record}}</small></h3>
+    <h6 style="text-align:left;"><strong>{{stats.vbgame.team[teamIndex].name}}</strong> <small>{{stats.vbgame.team[teamIndex].record}}</small></h6>
     <div class="table-responsive">
       <table class="table-striped table-sm table-condensed table table-hover table-bordered total_up">
         <thead>
@@ -108,46 +108,47 @@
       </table>
     </div>
   </div>
-
-  <h2>Team Attack Stats By Set</h2>
-  <div v-for="(i, teamIndex) in 2" :key="teamIndex">
-    <h3>{{stats.vbgame.team[teamIndex].name}} <small>{{stats.vbgame.team[teamIndex].linescore.score}} sets {{stats.vbgame.breakdowns[teamIndex].block}} blocks</small> </h3>
-    <div class="table-responsive mt-3">
-      <table class=" table-striped table-sm table-condensed table table-hover table-bordered total_up">
-        <thead>
-          <tr>
-            <th style="text-align:left">Set</th>
-            <th>K</th>
-            <th>E</th>
-            <th>TA</th>
-            <th>Pct</th>
-            <th>Pts</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(set ,index) in stats.vbgame.team[teamIndex].attackbygame.attackgame" :key="index">
-            <td style="text-align:left">{{set.game}}</td>
-            <td>{{set.k}}</td>
-            <td>{{set.e}}</td>
-            <td>{{set.ta}}</td>
-            <td>{{set.pct}}</td>
-            <td v-if="set.game == '1'">{{stats.vbgame.team[teamIndex].linescore.linegame[0].points}}</td>
-            <td v-if="set.game == '2'">{{stats.vbgame.team[teamIndex].linescore.linegame[1].points}}</td>
-            <td v-if="set.game == '3'">{{stats.vbgame.team[teamIndex].linescore.linegame[2].points}}</td>
-            <td v-if="set.game == '4'">{{stats.vbgame.team[teamIndex].linescore.linegame[3].points}}</td>
-            <td v-if="set.game == '5'">{{stats.vbgame.team[teamIndex].linescore.linegame[4].points}}</td>
-            <td v-if="set.game == '6'">{{stats.vbgame.team[teamIndex].linescore.linegame[5].points}}</td>
-          </tr>
-          <tr>
-            <th style="text-align:left">Totals</th>
-            <th>{{stats.vbgame.team[teamIndex].totals.attack.k}}</th>
-            <th>{{stats.vbgame.team[teamIndex].totals.attack.e}}</th>
-            <th>{{stats.vbgame.team[teamIndex].totals.attack.ta}}</th>
-            <th>{{stats.vbgame.team[teamIndex].totals.attack.pct}}</th>
-            <th>{{stats.vbgame.breakdowns[teamIndex].pts}}</th>
-          </tr>
-        </tbody>
-      </table>
+  <div class="mt-3">
+    <h4>Team Attack Stats By Set</h4>
+    <div v-for="(i, teamIndex) in 2" :key="teamIndex">
+      <h6 style="text-align:left;"><strong>{{stats.vbgame.team[teamIndex].name}}</strong> <small>{{stats.vbgame.team[teamIndex].linescore.score}} sets {{stats.vbgame.breakdowns[teamIndex].block}} blocks</small> </h6>
+      <div class="table-responsive mt-3">
+        <table class=" table-striped table-sm table-condensed table table-hover table-bordered total_up">
+          <thead>
+            <tr>
+              <th style="text-align:left">Set</th>
+              <th>K</th>
+              <th>E</th>
+              <th>TA</th>
+              <th>Pct</th>
+              <th>Pts</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(set ,index) in stats.vbgame.team[teamIndex].attackbygame.attackgame" :key="index">
+              <td style="text-align:left">{{set.game}}</td>
+              <td>{{set.k}}</td>
+              <td>{{set.e}}</td>
+              <td>{{set.ta}}</td>
+              <td>{{set.pct}}</td>
+              <td v-if="set.game == '1'">{{stats.vbgame.team[teamIndex].linescore.linegame[0].points}}</td>
+              <td v-if="set.game == '2'">{{stats.vbgame.team[teamIndex].linescore.linegame[1].points}}</td>
+              <td v-if="set.game == '3'">{{stats.vbgame.team[teamIndex].linescore.linegame[2].points}}</td>
+              <td v-if="set.game == '4'">{{stats.vbgame.team[teamIndex].linescore.linegame[3].points}}</td>
+              <td v-if="set.game == '5'">{{stats.vbgame.team[teamIndex].linescore.linegame[4].points}}</td>
+              <td v-if="set.game == '6'">{{stats.vbgame.team[teamIndex].linescore.linegame[5].points}}</td>
+            </tr>
+            <tr>
+              <th style="text-align:left">Totals</th>
+              <th>{{stats.vbgame.team[teamIndex].totals.attack.k}}</th>
+              <th>{{stats.vbgame.team[teamIndex].totals.attack.e}}</th>
+              <th>{{stats.vbgame.team[teamIndex].totals.attack.ta}}</th>
+              <th>{{stats.vbgame.team[teamIndex].totals.attack.pct}}</th>
+              <th>{{stats.vbgame.breakdowns[teamIndex].pts}}</th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </template>
