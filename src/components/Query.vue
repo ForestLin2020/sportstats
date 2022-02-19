@@ -84,10 +84,11 @@
         <div class="col-sm">
           <div class="form-group">
             <label></label><br>
+            <!-- :disabled="!(gamesRecordPlayerIn === null && gamesRecord === null)" -->
             <button
               id="submit"
               type="submit"
-              :disabled="gamesRecordPlayerIn === null || gamesRecord === null"
+              :disabled="stats === null"
               class="btn btn-outline-primary"
               @click="submit"
               >Submit
@@ -119,6 +120,11 @@
         :selected="selected"
         :gamesRecordPlayerIn="gamesRecordPlayerIn"
       />
+      <VolleyballScoreBox
+        v-if="(selected.sport == '1706' | selected.sport == '1716') && stats"
+        :selected="selected"
+        :stats="stats"
+      />
       <h1 v-if="!isStatsExist">Sorry, there is no stats.</h1>
     </div>
   </div>
@@ -129,6 +135,7 @@ import FootballAthlete from '@/components/FootballAthlete.vue'
 import VolleyballAthlete from '@/components/VolleyballAthlete.vue'
 import BaseballAthlete from '@/components/BaseballAthlete.vue'
 import SoccerAthlete from '@/components/SoccerAthlete.vue'
+import VolleyballScoreBox from '@/components/VolleyballScoreBox.vue'
 
 export default {
   name: 'Query',
@@ -145,6 +152,7 @@ export default {
       },
       athletes: [],
       gamesRecordPlayerIn: null, // disable and enable the submit button
+      stats: null,
       games: [],
       coaches: [],
       years: [],
@@ -155,13 +163,14 @@ export default {
     FootballAthlete,
     VolleyballAthlete,
     BaseballAthlete,
-    SoccerAthlete
+    SoccerAthlete,
+    VolleyballScoreBox
   },
   methods: {
     async getData () {
       // clear old data and disable the submit button when data is not received.
       this.gamesRecordPlayerIn = null
-      this.gamesRecord = null
+      this.stats = null
 
       if (this.selected.athleteNid) {
         // ======= fetch from URL API =======
@@ -169,30 +178,41 @@ export default {
         const res = await fetch(athletesUrl)
         const data = await res.json()
         this.gamesRecordPlayerIn = data
+        console.log('gamesRecordPlayerIn', this.gamesRecordPlayerIn)
       }
-
       if (this.selected.gameNid) {
-        const gamesUrl = `https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/boxscore/${this.selected.sport}/${this.selected.gameNid}`
+        // const gamesUrl = `https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/boxscore/${this.selected.gameNid}`
+        const gamesUrl = 'https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/boxscore/1287103'
         const res = await fetch(gamesUrl)
         const data = await res.json()
-        this.gamesRecord = data
+        this.stats = data[0]
+        console.log('stats', this.stats)
       }
     },
     submit () {
       console.log('selected', this.selected)
       // console.log('gamesRecordPlayerIn', this.gamesRecordPlayerIn)
       // call child function to clear or reorganize the data
-      if (this.selected.sport === '1698') this.$refs.myBaseball.reorganizeGames()
-      if (this.selected.sport === '1701') this.$refs.myFootball.reorganizeGames()
-      if (this.selected.sport === '1711') this.$refs.mySoccer.reorganizeGames()
-      if (this.selected.sport === '1706' | this.selected.sport === '1716') this.$refs.myVolleyball.reorganizeGames()
+      if (this.selected.sport === '1698' && this.selected.athleteNid) this.$refs.myBaseball.reorganizeGames()
+      if (this.selected.sport === '1701' && this.selected.athleteNid) this.$refs.myFootball.reorganizeGames()
+      if (this.selected.sport === '1711' && this.selected.athleteNid) this.$refs.mySoccer.reorganizeGames()
+      if ((this.selected.sport === '1706' || this.selected.sport === '1716') && this.selected.athleteNid) this.$refs.myVolleyball.reorganizeGames()
       this.statsExist() // show info if there is no stats for player
     },
     statsExist () {
-      if (this.gamesRecordPlayerIn.length === 0) {
-        this.isStatsExist = false
-      } else if (this.gamesRecordPlayerIn.length !== 0) {
-        this.isStatsExist = true
+      if (this.gamesRecordPlayerIn) {
+        if (this.gamesRecordPlayerIn.length === 0) {
+          this.isStatsExist = false
+        } else if (this.gamesRecordPlayerIn.length !== 0) {
+          this.isStatsExist = true
+        }
+      }
+      if (this.stats) {
+        if (this.stats.length === 0) {
+          this.isStatsExist = false
+        } else if (this.stats.length !== 0) {
+          this.isStatsExist = true
+        }
       }
     },
     async getYears () {

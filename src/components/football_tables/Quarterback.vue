@@ -1,6 +1,6 @@
 <template>
  <h5>Quarterback</h5>
-  <div class="career-and-season">
+  <div>
     <div class="table-responsive">
       <table class="table-striped table-sm table-condensed table table-hover table-bordered total_up">
         <thead>
