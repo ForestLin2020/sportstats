@@ -125,6 +125,11 @@
         :selected="selected"
         :stats="stats"
       />
+      <SoccerBoxScore
+        v-if="selected.sport == '1711' && stats"
+        :selected="selected"
+        :stats="stats"
+      />
       <h1 v-if="!isStatsExist">Sorry, there is no stats.</h1>
     </div>
   </div>
@@ -136,6 +141,7 @@ import VolleyballAthlete from '@/components/VolleyballAthlete.vue'
 import BaseballAthlete from '@/components/BaseballAthlete.vue'
 import SoccerAthlete from '@/components/SoccerAthlete.vue'
 import VolleyballBoxScore from '@/components/VolleyballBoxScore.vue'
+import SoccerBoxScore from '@/components/SoccerBoxScore.vue'
 
 export default {
   name: 'Query',
@@ -166,7 +172,8 @@ export default {
     VolleyballAthlete,
     BaseballAthlete,
     SoccerAthlete,
-    VolleyballBoxScore
+    VolleyballBoxScore,
+    SoccerBoxScore
   },
   methods: {
     changeAthleteGameCoachClear () {
@@ -200,17 +207,23 @@ export default {
       if ((this.selected.sport === '1706' || this.selected.sport === '1716') && this.selected.athleteNid) this.$refs.myVolleyball.reorganizeGames()
       // show box score table
       this.stats = this.gameRecords
+      console.log(this.stats)
+
       // show info if there is no stats for player
       this.statsExist()
       console.log('selected', this.selected)
     },
     statsExist () {
-      if (this.gamesRecordPlayerIn || this.stats) {
-        if (this.gamesRecordPlayerIn.length === 0 || this.stats.length === 0) {
-          this.isStatsExist = false
-        } else if (this.gamesRecordPlayerIn.length !== 0 || this.stats.length !== 0) {
-          this.isStatsExist = true
-        }
+      let data = null
+      if (this.gamesRecordPlayerIn) {
+        data = this.gamesRecordPlayerIn
+      } else if (this.stats) {
+        data = this.stats
+      }
+      if (data.length === 0) {
+        this.isStatsExist = false
+      } else if (data.length !== 0) {
+        this.isStatsExist = true
       }
     },
     changeSportClear () {
