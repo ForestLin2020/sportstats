@@ -7,7 +7,8 @@
   <div>
     <span><strong>byucougars.com Web Developer</strong></span><br>
     <span>Tyler, Steele</span><br>
-    <span>Forest, Lin</span>
+    <span>Forest, Lin</span><br>
+    <span>Dillon, Kunz</span>
   </div>
 </div>
 </template>

@@ -153,15 +153,9 @@
 export default {
   name: 'VolleyballScoreBox',
   props: ['selected', 'stats'],
-  data () {
-    return {
-      totalsByYear: [],
-      careerTotals: []
-    }
-  },
   methods: {
     playersInGameFilter (teamIndex) {
-      return this.stats.vbgame.team[teamIndex].player.filter(player => (player.gp !== '0' && player.uni !== 'TM')).sort(this.dateSort)
+      return this.stats.vbgame.team[teamIndex].player.filter(player => (player.gp !== '0' && player.uni !== 'TM'))
     }
   }
 }
