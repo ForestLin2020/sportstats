@@ -198,9 +198,8 @@ export default {
         console.log('gamesRecordPlayerIn', this.gamesRecordPlayerIn)
       }
       if (this.selected.gameNid) {
-        // 1295636
-        const gamesUrl = 'https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/boxscore/1295636'
-        // const gamesUrl = `https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/boxscore/${this.selected.gameNid}`
+        // const gamesUrl = 'https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/boxscore/1295636'
+        const gamesUrl = `https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/boxscore/${this.selected.gameNid}`
         const res = await fetch(gamesUrl)
         const data = await res.json()
         this.gameRecords = data[0]
@@ -229,7 +228,7 @@ export default {
       } else if (this.stats) {
         data = this.stats
       }
-      if (data.length === 0) {
+      if (data === null || data.length === 0) {
         this.isStatsExist = false
       } else if (data.length !== 0) {
         this.isStatsExist = true
