@@ -31,7 +31,7 @@
       v-bind:key="selected.athleteNid"
       :gamesRecordPlayerInCleared="gamesRecordPlayerInCleared"
       :gameYears="gameYears"/>
-    <Return
+    <Returner
       v-if="type == 'KrPr_table'"
       :selected="selected"
       v-bind:key="selected.athleteNid"
@@ -46,7 +46,7 @@ import OffensiveLine from '@/components/football_tables/OffensiveLine.vue'
 import Offensive from '@/components/football_tables/Offensive.vue'
 import Defensive from '@/components/football_tables/Defensive.vue'
 import KickerPunter from '@/components/football_tables/KickerPunter.vue'
-import Return from '@/components/football_tables/Return.vue'
+import Returner from '@/components/football_tables/Returner.vue'
 
 export default {
   name: 'FootballAthlete',
@@ -76,7 +76,7 @@ export default {
     Defensive,
     Offensive,
     KickerPunter,
-    Return
+    Returner
   },
   methods: {
     reorganizeGames () {
