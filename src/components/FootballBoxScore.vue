@@ -376,12 +376,12 @@
             <td>{{player.pass.att}}</td>
             <td>{{player.pass.int}}</td>
             <td>{{player.pass.yds}}</td>
-            <td>{{(player.pass.yds / player.pass.att).toFixed(2)}}</td>
+            <td v-if="player.pass.att !== '0'">{{(player.pass.yds / player.pass.att).toFixed(2)}}</td><td v-else>0</td>
             <td>{{player.pass.long}}</td>
             <td>{{player.pass.td}}</td>
             <td>{{player.pass.sacks}}</td>
             <!-- effic: ((8.4 * yds + 330 * td + 100 * comp - 200 * int) / att).toFixed(2) -->
-            <td>{{((8.4 * player.pass.yds + 330 * player.pass.td + 100 * player.pass.comp - 200 * player.pass.int) / player.pass.att).toFixed(2)}}</td>
+            <td v-if="player.pass.att !== '0'">{{((8.4 * player.pass.yds + 330 * player.pass.td + 100 * player.pass.comp - 200 * player.pass.int) / player.pass.att).toFixed(2)}}</td><td v-else>0</td>
           </tr>
         </tbody>
       </table>
@@ -411,7 +411,7 @@
             <td>{{player.rush.gain}}</td>
             <td>{{player.rush.loss}}</td>
             <td>{{(player.rush.gain - player.rush.loss)}}</td>
-            <td>{{ ((player.rush.gain - player.rush.loss) / player.rush.att).toFixed(1) }}</td>
+            <td v-if="player.rush.att !== '0'">{{ ((player.rush.gain - player.rush.loss) / player.rush.att).toFixed(1) }}</td><td v-else>0</td>
             <td>{{player.rush.long}}</td>
             <td>{{player.rush.td}}</td>
           </tr>
@@ -419,6 +419,158 @@
       </table>
     </div>
   </div>
+
+  <div v-for="(i, teamIndex) in 2" :key="teamIndex">
+    <h6 style="text-align:left;"><strong>{{stats.fbgame.team[teamIndex].name}} Receivers</strong></h6>
+    <div class="table-responsive">
+      <table class="table-striped table-sm table-condensed table table-hover table-bordered total_up">
+        <thead>
+          <tr>
+            <th style="text-align:left;">Athlete</th>
+            <th>No</th>
+            <th>Yds</th>
+            <th>Avg</th>
+            <th>Lng</th>
+            <th>TD</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="player in RCVsInGameFilter(teamIndex)" :key="player.uni">
+            <td nowrap style="text-align:left;">{{player.name}}</td>
+            <td>{{player.rcv.no}}</td>
+            <td>{{player.rcv.yds}}</td>
+            <td v-if="player.rcv.no !== '0'">{{ (player.rcv.yds / player.rcv.no).toFixed(1) }}</td><td v-else>0</td>
+            <td>{{player.rcv.long}}</td>
+            <td>{{player.rcv.td}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div v-for="(i, teamIndex) in 2" :key="teamIndex">
+    <h6 style="text-align:left;"><strong>{{stats.fbgame.team[teamIndex].name}} Fumbles</strong></h6>
+    <div class="table-responsive">
+      <table class="table-striped table-sm table-condensed table table-hover table-bordered total_up">
+        <thead>
+          <tr>
+            <th style="text-align:left;">Athlete</th>
+            <th>Fum</th>
+            <th>Lost</th>
+            <th>Rec</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="player in FbsInGameFilter(teamIndex)" :key="player.uni">
+            <td nowrap style="text-align:left;">{{player.name}}</td>
+            <td>{{player.fumbles.no}}</td>
+            <td>{{player.fumbles.lost}}</td>
+            <td v-if="player.fumbles.rec">{{player.fumbles.rec}}</td><td v-else>0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div v-for="(i, teamIndex) in 2" :key="teamIndex">
+    <h6 style="text-align:left;"><strong>{{stats.fbgame.team[teamIndex].name}} Interceptions</strong></h6>
+    <div class="table-responsive">
+      <table class="table-striped table-sm table-condensed table table-hover table-bordered total_up">
+        <thead>
+          <tr>
+            <th style="text-align:left;">Athlete</th>
+            <th>Fum</th>
+            <th>Yds</th>
+            <th>TD</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="player in IntceptInGameFilter(teamIndex)" :key="player.uni">
+            <td nowrap style="text-align:left;">{{player.name}}</td>
+            <td>{{player.ir.no}}</td>
+            <td>{{player.ir.yds}}</td>
+            <td v-if="player.ir.td">{{player.ir.td}}</td><td v-else>0</td>
+          </tr>
+          <tr v-if="IntceptInGameFilter(teamIndex).length === 0">
+            <td colspan="4">N/A</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div v-for="(i, teamIndex) in 2" :key="teamIndex">
+    <h6 style="text-align:left;"><strong>{{stats.fbgame.team[teamIndex].name}} Defensive</strong></h6>
+    <div class="table-responsive">
+      <table class="table-striped table-sm table-condensed table table-hover table-bordered total_up">
+        <thead>
+          <tr>
+            <th style="text-align:left;">Athlete</th>
+              <th>Tot</th>
+              <th>Solo</th>
+              <th>Sacks</th>
+              <th>TFL/Y</th>
+              <th>PBU</th>
+              <th>FF</th>
+              <th>QBH</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="player in DefInGameFilter(teamIndex)" :key="player.uni">
+            <td nowrap style="text-align:left;">{{player.name}}</td>
+            <td v-if="player.defense && player.defense.tot_tack">{{ player.defense.tot_tack }}</td><td v-else>0</td>
+            <td v-if="player.defense && player.defense.tackua">{{ player.defense.tackua }}</td><td v-else>0</td>
+            <td v-if="player.defense && player.defense.sackua">{{ player.defense.sackua }}</td><td v-else>0</td>
+            <td v-if="player.defense && player.defense.tfla">{{ player.defense.tfla }}/{{player.defense.tflyds }}</td><td v-else>0</td>
+            <td v-if="player.defense && player.defense.brup">{{ player.defense.brup }}</td><td v-else>0</td>
+            <td v-if="player.defense && player.defense.ff">{{ player.defense.ff }}</td><td v-else>0</td>
+            <td v-if="player.defense && player.defense.qbh">{{ player.defense.qbh }}</td><td v-else>0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div v-for="(i, teamIndex) in 2" :key="teamIndex">
+    <h6 style="text-align:left;"><strong>{{stats.fbgame.team[teamIndex].name}} Drive Summary</strong></h6>
+    <div class="table-responsive">
+      <table class="table-striped table-sm table-condensed table table-hover table-bordered total_up">
+        <thead>
+          <tr>
+            <th>Start</th>
+            <th>Quarter</th>
+            <th>Ball At</th>
+            <th>Plays</th>
+            <th>Yards</th>
+            <th>Result</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="drive in DriveGameFilter(teamIndex)" :key="drive.driveindex">
+            <td>
+                <span v-if="drive.start_time">{{drive.start_time}}</span>
+                <span v-if="!drive.start_time">{{drive.start[2]}}</span>
+            </td>
+            <td>
+                <span v-if="drive.start_qtr">{{drive.start_qtr}}</span>
+                <span v-if="!drive.start_qtr">{{drive.start[1]}}</span>
+            </td>
+            <td>
+                <span v-if="drive.start_spot">{{drive.start_spot}}</span>
+                <span v-if="!drive.start_spot">{{drive.start[3]}}</span>
+            </td>
+            <td>{{drive.plays}}</td>
+            <td>{{drive.yards}}</td>
+            <td>
+                <span v-if="drive.end_how">{{drive.end_how}}</span>
+                <span v-if="!drive.end_how">{{drive.end[0]}}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
 </template>
 
 <script>
@@ -437,6 +589,33 @@ export default {
     },
     netSort (a, b) {
       return (b.rush.gain - b.rush.loss) - (a.rush.gain - a.rush.loss)
+    },
+    RCVsInGameFilter (teamIndex) {
+      return this.stats.fbgame.team[teamIndex].player.filter(player => player.rcv).sort(this.ydsSort)
+    },
+    ydsSort (a, b) {
+      return b.rcv.yds - a.rcv.yds
+    },
+    FbsInGameFilter (teamIndex) {
+      return this.stats.fbgame.team[teamIndex].player.filter(player => player.fumbles).sort(this.noSort)
+    },
+    noSort (a, b) {
+      return b.fumbles.no - a.fumbles.no
+    },
+    IntceptInGameFilter (teamIndex) {
+      return this.stats.fbgame.team[teamIndex].player.filter(player => player.ir).sort(this.irnoSort)
+    },
+    irnoSort (a, b) {
+      return b.ir.no - a.ir.no
+    },
+    DefInGameFilter (teamIndex) {
+      return this.stats.fbgame.team[teamIndex].player.filter(player => player.defense).sort(this.defSort)
+    },
+    defSort (a, b) {
+      return b.defense.tot_tack - a.defense.tot_tack
+    },
+    DriveGameFilter (teamIndex) {
+      return this.stats.fbgame.drives.drive.filter(drive => drive.vh === this.stats.fbgame.team[teamIndex].vh)
     }
   }
 }
