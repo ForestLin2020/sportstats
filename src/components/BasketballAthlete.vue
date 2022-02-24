@@ -1,6 +1,5 @@
 <template>
- <h5>Basketball Hi</h5>
- <h5>Basketball Hi</h5>
+ <h5>Basketball</h5>
   <div class="career-and-season">
     <div class="table-responsive">
       <table class="table-striped table-sm table-condensed table table-hover table-bordered total_up">

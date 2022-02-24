@@ -397,8 +397,8 @@ export default {
     },
     getAVG (yds, no) {
       if (no === 0) return 0
-      const ya = (yds / no).toFixed(2)
-      return ya
+      const avg = (yds / no).toFixed(2)
+      return avg
     },
     getPCT (made, att) {
       // (game.fg.made / game.fg.att * 100).toFixed(2)
