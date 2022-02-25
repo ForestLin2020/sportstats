@@ -1,14 +1,30 @@
 <template>
   <div class="expander">
     <div class="query mt-3 p-3 container">
-      <svg @click="$emit('remove')" width="1em" height="1em" viewBox="0 0 16 16" id="close" class="bi bi-x btn-outline-danger x-button" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+      <svg
+        @click="$emit('remove')"
+        width="1em"
+        height="1em"
+        viewBox="0 0 16 16"
+        id="close"
+        class="bi bi-x btn-outline-danger x-button"
+        fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+        />
       </svg>
       <div class="row mt-1 mb-1">
         <div class="col-sm">
           <div class="form-group">
             <label>Sport</label>
-            <select class="form-select" v-model="selected.sport" @change="getYears(); changeSportClear();">
+            <select
+              class="form-select"
+              v-model="selected.sport"
+              @change="getYears(); changeSportClear();"
+            >
               <option value="1698">Baseball</option>
               <option value="1699">Men's Basketball</option>
               <option value="1707">Women's Basketball</option>
@@ -35,55 +51,100 @@
         <div class="col-sm">
           <div class="form-group">
             <label>Category</label>
-            <select id="category" class="form-select" v-model="selected.category" @change="getAthleteOrGamesOrCoach()">
+            <select
+              id="category"
+              class="form-select"
+              v-model="selected.category"
+              @change="getAthleteOrGamesOrCoach()"
+            >
               <option value="athlete">Athlete</option>
               <option value="coach">Coach</option>
               <option value="game">Game</option>
               <option value="season-stats">Season Stats</option>
             </select>
           </div>
-
         </div>
 
         <div class="col-sm">
           <div class="form-group">
             <label>Year</label>
-            <select id="year" class="form-select" v-model="selected.year" @change="getAthleteOrGamesOrCoach()">
-              <option v-for="(y, index) in years" :key="index" v-bind:value="y.Year">{{ y.Year }}</option>
+            <select
+              id="year"
+              class="form-select"
+              v-model="selected.year"
+              @change="getAthleteOrGamesOrCoach()"
+            >
+              <option
+                v-for="(y, index) in years"
+                :key="index"
+                v-bind:value="y.Year"
+              >
+                {{ y.Year }}
+              </option>
             </select>
           </div>
         </div>
 
-        <div v-if="selected.category==='athlete'" @change="changeAthleteGameCoachClear(); getData();" class="col-sm">
+        <div
+          v-if="selected.category === 'athlete'"
+          @change="changeAthleteGameCoachClear(); getData();"
+          class="col-sm"
+        >
           <div class="form-group">
             <label>Athlete</label>
             <select class="form-select" v-model="selected.athleteNid">
-              <option v-for="(ath, index) in athletes" :key="index" v-bind:value="ath.nid">{{ ath.field_last_name }} {{ ath.field_first_name }}</option>
+              <option
+                v-for="(ath, index) in athletes"
+                :key="index"
+                v-bind:value="ath.nid"
+              >
+                {{ ath.field_last_name }} {{ ath.field_first_name }}
+              </option>
             </select>
           </div>
         </div>
 
-        <div v-if="selected.category==='game'" @change="changeAthleteGameCoachClear(); getData();" class="col-sm">
+        <div
+          v-if="selected.category === 'game'"
+          @change="changeAthleteGameCoachClear(); getData();"
+          class="col-sm"
+        >
           <div class="form-group">
             <label>Game</label>
             <select class="form-select" v-model="selected.gameNid">
-              <option v-for="(game, index) in games" :key="index" v-bind:value="game.nid">{{ game.title }}</option>
+              <option
+                v-for="(game, index) in games"
+                :key="index"
+                v-bind:value="game.nid"
+              >
+                {{ game.title }}
+              </option>
             </select>
           </div>
         </div>
 
-        <div v-if="selected.category==='coach'" @change="changeAthleteGameCoachClear(); getData();" class="col-sm">
+        <div
+          v-if="selected.category === 'coach'"
+          @change="changeAthleteGameCoachClear(); getData();"
+          class="col-sm"
+        >
           <div class="form-group">
             <label>Coach</label>
             <select class="form-select" v-model="selected.coach">
-              <option v-for="(coach, index) in coaches" :key="index" v-bind:value="coach.nid">{{ coach.title }}</option>
+              <option
+                v-for="(coach, index) in coaches"
+                :key="index"
+                v-bind:value="coach.nid"
+              >
+                {{ coach.title }}
+              </option>
             </select>
           </div>
         </div>
 
         <div class="col-sm">
           <div class="form-group">
-            <label></label><br>
+            <label></label><br />
             <!-- :disabled="!(gamesRecordPlayerIn === null && gamesRecord === null)" -->
             <button
               id="submit"
@@ -91,7 +152,8 @@
               :disabled="!isBoxScoreTableReady && gamesRecordPlayerIn === null"
               class="btn btn-outline-primary"
               @click="submit"
-              >Submit
+            >
+              Submit
             </button>
           </div>
         </div>
@@ -104,7 +166,10 @@
       />
       <VolleyballAthlete
         ref="myVolleyball"
-        v-if="(selected.sport == '1706' | selected.sport == '1716') && gamesRecordPlayerIn"
+        v-if="
+          (selected.sport == '1706') | (selected.sport == '1716') &&
+          gamesRecordPlayerIn
+        "
         :selected="selected"
         :gamesRecordPlayerIn="gamesRecordPlayerIn"
       />
@@ -121,7 +186,7 @@
         :gamesRecordPlayerIn="gamesRecordPlayerIn"
       />
       <VolleyballBoxScore
-        v-if="(selected.sport == '1706' | selected.sport == '1716') && stats"
+        v-if="(selected.sport == '1706') | (selected.sport == '1716') && stats"
         :selected="selected"
         :stats="stats"
       />
@@ -205,8 +270,8 @@ export default {
         console.log('gamesRecordPlayerIn', this.gamesRecordPlayerIn)
       }
       if (this.selected.gameNid) {
-        const gamesUrl = 'https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/boxscore/1290913'
-        // const gamesUrl = `https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/boxscore/${this.selected.gameNid}`
+        // const gamesUrl = 'https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/boxscore/1287037'
+        const gamesUrl = `https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/boxscore/${this.selected.gameNid}`
         const res = await fetch(gamesUrl)
         const data = await res.json()
         this.gameRecords = data[0]
@@ -216,17 +281,22 @@ export default {
     },
     submit () {
       // call child function to clear and reorganize the data, and then show table
-      if (this.selected.sport === '1698' && this.selected.athleteNid) this.$refs.myBaseball.reorganizeGames()
-      if (this.selected.sport === '1701' && this.selected.athleteNid) this.$refs.myFootball.reorganizeGames()
-      if (this.selected.sport === '1711' && this.selected.athleteNid) this.$refs.mySoccer.reorganizeGames()
-      if ((this.selected.sport === '1706' || this.selected.sport === '1716') && this.selected.athleteNid) this.$refs.myVolleyball.reorganizeGames()
+      if (this.selected.sport === '1698' && this.selected.athleteNid) {
+        this.$refs.myBaseball.reorganizeGames()
+      } else if (this.selected.sport === '1701' && this.selected.athleteNid) {
+        this.$refs.myFootball.reorganizeGames()
+      } else if (this.selected.sport === '1711' && this.selected.athleteNid) {
+        this.$refs.mySoccer.reorganizeGames()
+      } else if ((this.selected.sport === '1706' || this.selected.sport === '1716') && this.selected.athleteNid) {
+        this.$refs.myVolleyball.reorganizeGames()
+      }
       // show box score table
       this.stats = this.gameRecords
-      console.log(this.stats)
+      // console.log(this.stats)
 
       // show info if there is no stats for player
       this.statsExist()
-      console.log('selected', this.selected)
+      // console.log('selected', this.selected)
     },
     statsExist () {
       let data = null
@@ -309,13 +379,13 @@ export default {
   background-color: white;
   box-shadow: 0px 0px 5px 1px rgb(0 0 0 / 20%);
   border-radius: 5px;
-  position:relative;
+  position: relative;
 }
 
 .x-button {
-  position:absolute;
-  top:0;
-  right:0;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 #submit:hover {
