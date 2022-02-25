@@ -181,7 +181,6 @@ export default {
         'Nov.', // "November",
         'Dec.' // "December",
       ],
-      games: [],
       totalsByYear: [],
       careerTotals: [],
       gamesRecordPlayerInCleared: [],
@@ -189,9 +188,7 @@ export default {
     }
   },
   mounted () {
-    // console.log('selected', this.selected)
-    // console.log('games', this.games)
-    // console.log('gameYears', this.gameYears)
+    // you can do some thing here
   },
   methods: {
     reorganizeGames () {
@@ -204,9 +201,11 @@ export default {
       const data = this.gamesRecordPlayerIn
       for (var i = 0; i < data.length; i++) {
         // x.id === 'BYU' or x.name === 'BYU' or x.name === 'BY'
-        const byuTeamIndex = data[i].vbgame.team.findIndex(x => x.id === 'BYU') // find index in array
+        const byuTeamIndex = data[i].vbgame.team.findIndex(x => (x.id === 'BYU' || x.name === 'BYU')) // find index in array
         const oppoTeamIndex = data[i].vbgame.team.findIndex(x => x.id !== 'BYU') // find index in array
         const byuTeamStat = data[i].vbgame.team[byuTeamIndex]
+        console.log('i', i)
+        console.log('this.selected.athleteNid', this.selected.athleteNid)
         const playerIndex = byuTeamStat.player.findIndex(x => x.player_nid === this.selected.athleteNid - 0)
         const playerStat = byuTeamStat.player[playerIndex]
 
@@ -232,10 +231,9 @@ export default {
       // ===== Order the games' year for table order =====
       this.gameYears.sort()
       this.gameYears.reverse()
-      this.games = this.gamesRecordPlayerInCleared
       this.calTotalsByYear(this.gameYears)
       console.log('selected', this.selected)
-      console.log('games', this.games)
+      console.log('gamesRecordPlayerInCleared', this.gamesRecordPlayerInCleared)
       console.log('gameYears', this.gameYears)
     },
     formDateStr (str) {
@@ -246,7 +244,7 @@ export default {
       return dateStr
     },
     gamesFilterEventsByYear (year) {
-      return this.games.filter(game => game.schedule_year === year).sort(this.dateSort)
+      return this.gamesRecordPlayerInCleared.filter(game => game.schedule_year === year).sort(this.dateSort)
     },
     dateSort (a, b) {
       if (a.event_date < b.event_date) {

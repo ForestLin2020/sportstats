@@ -91,7 +91,7 @@ export default {
       const data = this.gamesRecordPlayerIn
       for (var i = 0; i < data.length; i++) {
         // x.id === 'BYU' or x.name === 'BYU' or x.name === 'BY'
-        const byuTeamIndex = data[i].fbgame.team.findIndex(x => x.id === 'BYU') // find index in array
+        const byuTeamIndex = data[i].fbgame.team.findIndex(x => (x.id === 'BYU' || x.name === 'BYU')) // find index in array
         const oppoTeamIndex = data[i].fbgame.team.findIndex(x => x.id !== 'BYU') // find index in array
         const byuTeamStat = data[i].fbgame.team[byuTeamIndex]
         const playerIndex = byuTeamStat.player.findIndex(x => x.player_nid === this.selected.athleteNid - 0)

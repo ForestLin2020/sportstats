@@ -58,7 +58,7 @@ export default {
 
       const data = this.gamesRecordPlayerIn
       for (var i = 0; i < data.length; i++) {
-        const byuTeamIndex = data[i].bsgame.team.findIndex(x => x.id === 'BYU') // find index in array
+        const byuTeamIndex = data[i].bsgame.team.findIndex(x => (x.id === 'BYU' || x.name === 'BYU')) // find index in array
         const oppoTeamIndex = data[i].bsgame.team.findIndex(x => x.id !== 'BYU') // find index in array
         const byuTeamStat = data[i].bsgame.team[byuTeamIndex]
         const playerIndex = byuTeamStat.player.findIndex(x => x.player_nid === this.selected.athleteNid - 0)

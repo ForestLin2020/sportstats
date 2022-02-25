@@ -179,6 +179,12 @@
         :selected="selected"
         :gamesRecordPlayerIn="gamesRecordPlayerIn"
       />
+      <BasketballAthlete
+        ref="myBasketball"
+        v-if="(selected.sport == '1699') | (selected.sport == '1707') && gamesRecordPlayerIn"
+        :selected="selected"
+        :gamesRecordPlayerIn="gamesRecordPlayerIn"
+      />
       <SoccerAthlete
         ref="mySoccer"
         v-if="selected.sport == '1711' && gamesRecordPlayerIn"
@@ -214,6 +220,7 @@
 import FootballAthlete from '@/components/FootballAthlete.vue'
 import VolleyballAthlete from '@/components/VolleyballAthlete.vue'
 import BaseballAthlete from '@/components/BaseballAthlete.vue'
+import BasketballAthlete from '@/components/BasketballAthlete.vue'
 import SoccerAthlete from '@/components/SoccerAthlete.vue'
 import VolleyballBoxScore from '@/components/boxscore_tables/VolleyballBoxScore.vue'
 import SoccerBoxScore from '@/components/boxscore_tables/SoccerBoxScore.vue'
@@ -248,6 +255,7 @@ export default {
     FootballAthlete,
     VolleyballAthlete,
     BaseballAthlete,
+    BasketballAthlete,
     SoccerAthlete,
     VolleyballBoxScore,
     SoccerBoxScore,
@@ -270,8 +278,8 @@ export default {
         console.log('gamesRecordPlayerIn', this.gamesRecordPlayerIn)
       }
       if (this.selected.gameNid) {
-        // const gamesUrl = 'https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/boxscore/1287037'
-        const gamesUrl = `https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/boxscore/${this.selected.gameNid}`
+        const gamesUrl = 'https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/boxscore/1286262'
+        // const gamesUrl = `https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/boxscore/${this.selected.gameNid}`
         const res = await fetch(gamesUrl)
         const data = await res.json()
         this.gameRecords = data[0]
@@ -283,6 +291,8 @@ export default {
       // call child function to clear and reorganize the data, and then show table
       if (this.selected.sport === '1698' && this.selected.athleteNid) {
         this.$refs.myBaseball.reorganizeGames()
+      } else if ((this.selected.sport === '1699' || this.selected.sport === '1707') && this.selected.athleteNid) {
+        this.$refs.myBasketball.reorganizeGames()
       } else if (this.selected.sport === '1701' && this.selected.athleteNid) {
         this.$refs.myFootball.reorganizeGames()
       } else if (this.selected.sport === '1711' && this.selected.athleteNid) {
@@ -292,7 +302,6 @@ export default {
       }
       // show box score table
       this.stats = this.gameRecords
-      // console.log(this.stats)
 
       // show info if there is no stats for player
       this.statsExist()
