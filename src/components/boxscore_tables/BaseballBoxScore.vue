@@ -51,7 +51,7 @@
               <th title="Strike Outs">SO</th>
               <th title="Stolen Bases">SB</th>
               <th title="Caught Stealing">CS</th>
-              <th title="Sacrifice Fly">SF</th>
+              <th title="Sacrifice sf">SF</th>
               <th title="Sacrifice Hit">SH</th>
               <th title="Hit By Pinch">HBP</th>
               <th title="Average">AVG</th>
@@ -80,7 +80,7 @@
               <td v-if="player.hitting.so">{{player.hitting.so}}</td><td v-else>0</td>
               <td v-if="player.hitting.sb">{{player.hitting.sb}}</td><td v-else>0</td>
               <td v-if="player.hitting.cs">{{player.hitting.cs}}</td><td v-else>0</td>
-              <td v-if="player.hitting.fly">{{player.hitting.fly}}</td><td v-else>0</td>
+              <td v-if="player.hitting.sf">{{player.hitting.sf}}</td><td v-else>0</td>
               <td v-if="player.hitting.sh">{{player.hitting.sh}}</td><td v-else>0</td>
               <td v-if="player.hitting.hbp">{{player.hitting.hbp}}</td><td v-else>0</td>
               <!-- AVG -->
@@ -90,7 +90,7 @@
               <td v-if="player.hitting.ab !== '0'">{{ (((player.hitting.h - 0) + (player.hitting.double - 0) + (player.hitting.triple - 0) * 2 + (player.hitting.hr - 0) * 3) / player.hitting.ab).toFixed(3) }}</td>
               <td v-else>N/A</td>
               <!-- On Base % (OBP) -->
-              <td v-if="((player.hitting.ab - 0) + (player.hitting.bb - 0) + (player.hitting.hbp - 0) + (player.hitting.fly - 0)) !== 0">{{(((player.hitting.h - 0) + (player.hitting.bb - 0) + (player.hitting.hbp - 0)) / ((player.hitting.ab - 0) + (player.hitting.bb - 0) + (player.hitting.hbp - 0) + (player.hitting.fly - 0))).toFixed(3)}}</td>
+              <td v-if="((player.hitting.ab - 0) + (player.hitting.bb - 0) + (player.hitting.hbp - 0) + (player.hitting.sf - 0)) !== 0">{{(((player.hitting.h - 0) + (player.hitting.bb - 0) + (player.hitting.hbp - 0)) / ((player.hitting.ab - 0) + (player.hitting.bb - 0) + (player.hitting.hbp - 0) + (player.hitting.sf - 0))).toFixed(3)}}</td>
               <td v-else>N/A</td>
               <td>{{player.fielding.po}}</td>
               <td>{{player.fielding.a}}</td>
@@ -111,7 +111,7 @@
                 <th>{{battingTotals.hitting.so}}</th>
                 <th>{{battingTotals.hitting.sb}}</th>
                 <th>{{battingTotals.hitting.cs}}</th>
-                <th>{{battingTotals.hitting.fly}}</th>
+                <th>{{battingTotals.hitting.sf}}</th>
                 <th>{{battingTotals.hitting.sh}}</th>
                 <th>{{battingTotals.hitting.hbp}}</th>
                 <th>{{battingTotals.hitting.avg}}</th>
@@ -169,7 +169,7 @@
               <td>{{player.pitching.sfa}}</td>
               <td colspan="2">{{player.pitching.sha}}</td>
               <td colspan="2">{{ (player.pitching.h / player.pitching.ab).toFixed(3) }}</td>
-              <td colspan="2">{{ ((player.pitching.er * 7) / player.pitching.innings_pitched).toFixed(3) }}</td>
+              <td colspan="2">{{ ((player.pitching.er * 9) / player.pitching.innings_pitched).toFixed(3) }}</td>
             </tr>
             <tr>
               <th style="text-align:left">Pitching Totals</th>
@@ -224,7 +224,7 @@ export default {
         if (!players[i].hitting.ab) players[i].hitting.ab = 0
         if (!players[i].hitting.bb) players[i].hitting.bb = 0
         if (!players[i].hitting.hbp) players[i].hitting.hbp = 0
-        if (!players[i].hitting.fly) players[i].hitting.fly = 0
+        if (!players[i].hitting.sf) players[i].hitting.sf = 0
       }
       this.reorganizeBattingTotals(teamIndex)
       return players
@@ -286,17 +286,17 @@ export default {
       if (!totals.hitting.so) totals.hitting.so = 0
       if (!totals.hitting.sb) totals.hitting.sb = 0
       if (!totals.hitting.cs) totals.hitting.cs = 0
-      if (!totals.hitting.fly) totals.hitting.fly = 0
+      if (!totals.hitting.sf) totals.hitting.sf = 0
       if (!totals.hitting.sh) totals.hitting.sh = 0
       if (!totals.hitting.hbp) totals.hitting.hbp = 0
       if (!totals.fielding.po) totals.fielding.po = 0
       if (!totals.fielding.a) totals.fielding.a = 0
       if (!totals.fielding.e) totals.fielding.e = 0
       // ===== Initial OBP value =====
-      if (((totals.hitting.ab - 0) + (totals.hitting.bb - 0) + (totals.hitting.hbp - 0) + (totals.hitting.fly - 0)) === 0) {
+      if (((totals.hitting.ab - 0) + (totals.hitting.bb - 0) + (totals.hitting.hbp - 0) + (totals.hitting.sf - 0)) === 0) {
         totals.hitting.obp = 'N/A'
       } else {
-        totals.hitting.obp = (((totals.hitting.h - 0) + (totals.hitting.bb - 0) + (totals.hitting.hbp - 0)) / ((totals.hitting.ab - 0) + (totals.hitting.bb - 0) + (totals.hitting.hbp - 0) + (totals.hitting.fly - 0))).toFixed(3)
+        totals.hitting.obp = (((totals.hitting.h - 0) + (totals.hitting.bb - 0) + (totals.hitting.hbp - 0)) / ((totals.hitting.ab - 0) + (totals.hitting.bb - 0) + (totals.hitting.hbp - 0) + (totals.hitting.sf - 0))).toFixed(3)
       }
       // ===== Initial FLD value =====
       if (((totals.fielding.po - 0) + (totals.fielding.a - 0) + (totals.fielding.e - 0)) === 0) {
@@ -335,7 +335,7 @@ export default {
       if (!pitching.innings_pitched) {
         pitching.era = 'N/A'
       } else {
-        pitching.era = (((pitching.er - 0) * 7) / pitching.innings_pitched).toFixed(3)
+        pitching.era = (((pitching.er - 0) * 9) / pitching.innings_pitched).toFixed(3)
       }
       this.pitchingTotals = pitching
     }

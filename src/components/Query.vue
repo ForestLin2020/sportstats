@@ -211,6 +211,11 @@
         :selected="selected"
         :stats="stats"
       />
+      <BaseballBoxScore
+        v-if="selected.sport == '1698' && stats"
+        :selected="selected"
+        :stats="stats"
+      />
       <h1 v-if="!isStatsExist">Sorry, there is no stats.</h1>
     </div>
   </div>
@@ -226,6 +231,7 @@ import VolleyballBoxScore from '@/components/boxscore_tables/VolleyballBoxScore.
 import SoccerBoxScore from '@/components/boxscore_tables/SoccerBoxScore.vue'
 import FootballBoxScore from '@/components/boxscore_tables/FootballBoxScore.vue'
 import SoftballBoxScore from '@/components/boxscore_tables/SoftballBoxScore.vue'
+import BaseballBoxScore from '@/components/boxscore_tables/BaseballBoxScore.vue'
 
 export default {
   name: 'Query',
@@ -260,7 +266,8 @@ export default {
     VolleyballBoxScore,
     SoccerBoxScore,
     FootballBoxScore,
-    SoftballBoxScore
+    SoftballBoxScore,
+    BaseballBoxScore
   },
   methods: {
     changeAthleteGameCoachClear () {
@@ -278,7 +285,7 @@ export default {
         console.log('gamesRecordPlayerIn', this.gamesRecordPlayerIn)
       }
       if (this.selected.gameNid) {
-        const gamesUrl = 'https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/boxscore/1286262'
+        const gamesUrl = 'https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/boxscore/1288584'
         // const gamesUrl = `https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/boxscore/${this.selected.gameNid}`
         const res = await fetch(gamesUrl)
         const data = await res.json()
