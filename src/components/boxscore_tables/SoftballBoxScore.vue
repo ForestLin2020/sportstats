@@ -1,5 +1,5 @@
 <template>
-  <h2>Softball Box Score111</h2>
+  <h2>Softball Box Score</h2>
   <div class="game-description" nowrap>
     <!-- 2017 Concordia Irvine -->
     <h6 style="text-align:left;"><strong v-if="stats.bsgame.venue.location">Location:</strong> {{ stats.bsgame.venue.location }} </h6>
