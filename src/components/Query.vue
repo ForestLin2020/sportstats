@@ -216,8 +216,13 @@
         :selected="selected"
         :stats="stats"
       />
-      <BasketballBoxScore
-        v-if="(selected.sport == '1699') | (selected.sport == '1707') && stats"
+      <MensBasketballBoxScore
+        v-if="selected.sport == '1699' && stats"
+        :selected="selected"
+        :stats="stats"
+      />
+      <WomensBasketballBoxScore
+        v-if="selected.sport == '1707' && stats"
         :selected="selected"
         :stats="stats"
       />
@@ -237,7 +242,8 @@ import SoccerBoxScore from '@/components/boxscore_tables/SoccerBoxScore.vue'
 import FootballBoxScore from '@/components/boxscore_tables/FootballBoxScore.vue'
 import SoftballBoxScore from '@/components/boxscore_tables/SoftballBoxScore.vue'
 import BaseballBoxScore from '@/components/boxscore_tables/BaseballBoxScore.vue'
-import BasketballBoxScore from '@/components/boxscore_tables/BasketballBoxScore.vue'
+import MensBasketballBoxScore from '@/components/boxscore_tables/MensBasketballBoxScore.vue'
+import WomensBasketballBoxScore from '@/components/boxscore_tables/WomensBasketballBoxScore.vue'
 
 export default {
   name: 'Query',
@@ -274,7 +280,8 @@ export default {
     SoccerBoxScore,
     SoftballBoxScore,
     BaseballBoxScore,
-    BasketballBoxScore
+    MensBasketballBoxScore,
+    WomensBasketballBoxScore
   },
   methods: {
     changeAthleteGameCoachClear () {
@@ -292,8 +299,8 @@ export default {
         console.log('gamesRecordPlayerIn', this.gamesRecordPlayerIn)
       }
       if (this.selected.gameNid) {
-        const gamesUrl = 'https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/boxscore/1290253'
-        // const gamesUrl = `https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/boxscore/${this.selected.gameNid}`
+        // const gamesUrl = 'https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/boxscore/1290213'
+        const gamesUrl = `https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/boxscore/${this.selected.gameNid}`
         const res = await fetch(gamesUrl)
         const data = await res.json()
         this.gameRecords = data[0]
