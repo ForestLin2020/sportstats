@@ -1,88 +1,273 @@
 <template>
  <h5>Basketball</h5>
-  <div class="career-and-season">
+  <div class="career-and-season" v-if="totalsByYear.length != 0">
+    <h4>Career & Season Highs</h4>
     <div class="table-responsive">
-      <table class="table-striped table-sm table-condensed table table-hover table-bordered total_up">
+      <table class="table-striped table-sm table-condensed table table-hover table-bordered total_up" style="text-align: left">
         <thead>
-        <tr>
-            <th colspan="5">Career</th>
-            <th colspan="8">Scoring</th>
-            <th colspan="10">Misc</th>
+          <tr>
+            <th></th>
+            <th nowrap>{{ gameYears[gameYears.length-1] }} Season Highs</th>
+            <th nowrap>Career Highs</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <th>Year</th>
-            <th>GP</th>
-            <th>GS</th>
-            <th>MIN</th>
-            <th>AVG</th>
-            <th>PTS</th>
-            <th>AVG</th>
-            <th>FG-FGA</th>
-            <th>FG%</th>
-            <th>3P-3PA</th>
-            <th>3P%</th>
-            <th>FT-FTA</th>
-            <th>FT%</th>
-            <th>OFF</th>
-            <th>DEF</th>
-            <th>REB</th>
-            <th>AVG</th>
-            <th>AST</th>
-            <th>AVG</th>
-            <th>BLK</th>
-            <th>STL</th>
-            <th>PF</th>
+            <td>Points</td>
+            <td nowrap>-</td>
+            <td nowrap>
+              <span>
+                <strong>{{ carrerHighs.pointsGame.stats.tp }}</strong>
+                <!-- <span v-if="carrerHighs.pointsGame.stats.highestValueHappenTimes > 1">{{carrerHighs.pointsGame.stats.highestValueHappenTimes}} times, last was </span> -->
+                <span v-if="carrerHighs.pointsGame.venue.neutralgame === 'Y'"> vs.</span>
+                <span v-else-if="carrerHighs.pointsGame.venue.homeid === 'BYU'"> </span>
+                <span v-else> @</span>
+                {{ carrerHighs.pointsGame.title }} ({{ formDateStrWithYear(carrerHighs.pointsGame.event_date)}})
+              </span>
+            </td>
           </tr>
-          <!-- <tr v-for="(totals,index) in totalsByYear" :key="index">
-            <td>{{ totals.schedule_year }}</td>
-            <td>{{ totals.gp }}</td>
-            <td>{{ totals.gs }}</td>
-            <td>{{ totals.min }}</td>
-            <td>{{ totals.avg }}</td>
-            <td>{{ totals.scoring.pts }}</td>
-            <td>{{ totals.scoring.avg }}</td>
-            <td>{{ totals.scoring.fg-fga }}</td>
-            <td>{{ totals.scoring.fgpercent }}</td>
-            <td>{{ totals.scoring.threep-threepa}}</td>
-            <td>{{ totals.scoring.threepercent }}</td>
-            <td>{{ totals.scoring.ft-fta }}</td>
-            <td>{{ totals.scoring.ftpercent }}</td>
-            <td>{{ totals.misc.off }}</td>
-            <td>{{ totals.misc.def }}</td>
-            <td>{{ totals.misc.reb }}</td>
-            <td>{{ totals.misc.avg }}</td>
-            <td>{{ totals.misc.ast }}</td>
-            <td>{{ totals.misc.avg }}</td>
-            <td>{{ totals.misc.blk }}</td>
-            <td>{{ totals.misc.stl }}</td>
-            <td>{{ totals.misc.pf }}</td>
-          </tr> -->
-          <!-- <tr>
-            <th>TOTALS:</th>
-            <th>{{ careerTotals.gp }}</th>
-            <th>{{ careerTotals.gs }}</th>
-            <th>{{ careerTotals.min }}</th>
-            <th>{{ careerTotals.avg }}</th>
-            <th v-if="careerTotals.scoring" nowrap>{{ careerTotals.scoring.pts }}</th><th v-else>0</th>
-            <th v-if="careerTotals.scoring" nowrap>{{ careerTotals.scoring.avg }}</th><th v-else>0</th>
-            <th v-if="careerTotals.scoring" nowrap>{{ careerTotals.scoring.fg-fga }}</th><th v-else>0</th>
-            <th v-if="careerTotals.scoring" nowrap>{{ careerTotals.scoring.fgpercent }}</th><th v-else>0</th>
-            <th v-if="careerTotals.scoring" nowrap>{{ careerTotals.scoring.threep-threepa }}</th><th v-else>0</th>
-            <th v-if="careerTotals.scoring" nowrap>{{ careerTotals.scoring.threepercent }}</th><th v-else>0</th>
-            <th v-if="careerTotals.scoring" nowrap>{{ careerTotals.scoring.ft-fta }}</th><th v-else>0</th>
-            <th v-if="careerTotals.scoring" nowrap>{{ careerTotals.scoring.ftpercent }}</th><th v-else>0</th>
-            <th v-if="careerTotals.misc" nowrap>{{ careerTotals.misc.off }}</th><th v-else>0</th>
-            <th v-if="careerTotals.misc" nowrap>{{ careerTotals.misc.def }}</th><th v-else>0</th>
-            <th v-if="careerTotals.misc" nowrap>{{ careerTotals.misc.reb }}</th><th v-else>0</th>
-            <th v-if="careerTotals.misc" nowrap>{{ careerTotals.misc.avg }}</th><th v-else>0</th>
-            <th v-if="careerTotals.misc" nowrap>{{ careerTotals.misc.ast }}</th><th v-else>0</th>
-            <th v-if="careerTotals.misc" nowrap>{{ careerTotals.misc.avg }}</th><th v-else>0</th>
-            <th v-if="careerTotals.misc" nowrap>{{ careerTotals.misc.blk }}</th><th v-else>0</th>
-            <th v-if="careerTotals.misc" nowrap>{{ careerTotals.misc.stl }}</th><th v-else>0</th>
-            <th v-if="careerTotals.misc" nowrap>{{ careerTotals.misc.pf }}</th><th v-else>0</th>
-          </tr> -->
+          <tr>
+            <td>Field Goals Made</td>
+            <td nowrap>-</td>
+            <td nowrap>
+              <span>
+                <strong>{{ carrerHighs.fieldGoalsMadeGame.stats.fgm }}</strong>
+                <!-- <span v-if="topGameStats.ptsCounter >1 ">{[{topGameStats.ptsCounter}]} times, last was </span> -->
+                <span v-if="carrerHighs.fieldGoalsMadeGame.venue.neutralgame === 'Y'"> vs.</span>
+                <span v-else-if="carrerHighs.fieldGoalsMadeGame.venue.homeid === 'BYU'"> </span>
+                <span v-else> @</span>
+                {{ carrerHighs.fieldGoalsMadeGame.title }} ({{ formDateStrWithYear(carrerHighs.fieldGoalsMadeGame.event_date)}})
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Field Goals Attempts</td>
+            <td nowrap>-</td>
+            <td nowrap>
+              <span>
+                <strong>{{ carrerHighs.fieldGoalsAttemptsGame.stats.fga }}</strong>
+                <!-- <span v-if="topGameStats.ptsCounter >1 ">{[{topGameStats.ptsCounter}]} times, last was </span> -->
+                <span v-if="carrerHighs.fieldGoalsAttemptsGame.venue.neutralgame === 'Y'"> vs.</span>
+                <span v-else-if="carrerHighs.fieldGoalsAttemptsGame.venue.homeid === 'BYU'"> </span>
+                <span v-else> @</span>
+                {{ carrerHighs.fieldGoalsAttemptsGame.title }} ({{ formDateStrWithYear(carrerHighs.fieldGoalsAttemptsGame.event_date)}})
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Three Point Field Goals Made</td>
+            <td nowrap>-</td>
+            <td nowrap>
+              <span>
+                <strong>{{ carrerHighs.threePointFieldGoalsMadeGame.stats.fgm3 }}</strong>
+                <!-- <span v-if="topGameStats.ptsCounter >1 ">{[{topGameStats.ptsCounter}]} times, last was </span> -->
+                <span v-if="carrerHighs.threePointFieldGoalsMadeGame.venue.neutralgame === 'Y'"> vs.</span>
+                <span v-else-if="carrerHighs.threePointFieldGoalsMadeGame.venue.homeid === 'BYU'"> </span>
+                <span v-else> @</span>
+                {{ carrerHighs.threePointFieldGoalsMadeGame.title }} ({{ formDateStrWithYear(carrerHighs.threePointFieldGoalsMadeGame.event_date)}})
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Three Point Field Goals Attempts</td>
+            <td nowrap>-</td>
+            <td nowrap>
+              <span>
+                <strong>{{ carrerHighs.threePointFieldGoalsAttemptsGame.stats.fga3 }}</strong>
+                <!-- <span v-if="topGameStats.ptsCounter >1 ">{[{topGameStats.ptsCounter}]} times, last was </span> -->
+                <span v-if="carrerHighs.threePointFieldGoalsAttemptsGame.venue.neutralgame === 'Y'"> vs.</span>
+                <span v-else-if="carrerHighs.threePointFieldGoalsAttemptsGame.venue.homeid === 'BYU'"> </span>
+                <span v-else> @</span>
+                {{ carrerHighs.threePointFieldGoalsAttemptsGame.title }} ({{ formDateStrWithYear(carrerHighs.threePointFieldGoalsAttemptsGame.event_date)}})
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Free Throws Made</td>
+            <td nowrap>-</td>
+            <td nowrap>
+              <span>
+                <strong>{{ carrerHighs.freeThrowsMadeGame.stats.ftm }}</strong>
+                <!-- <span v-if="topGameStats.ptsCounter >1 ">{[{topGameStats.ptsCounter}]} times, last was </span> -->
+                <span v-if="carrerHighs.freeThrowsMadeGame.venue.neutralgame === 'Y'"> vs.</span>
+                <span v-else-if="carrerHighs.freeThrowsMadeGame.venue.homeid === 'BYU'"> </span>
+                <span v-else> @</span>
+                {{ carrerHighs.freeThrowsMadeGame.title }} ({{ formDateStrWithYear(carrerHighs.freeThrowsMadeGame.event_date)}})
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Free Throw Attempts</td>
+            <td nowrap>-</td>
+            <td nowrap>
+              <span>
+                <strong>{{ carrerHighs.freeThrowAttemptsGame.stats.fta }}</strong>
+                <!-- <span v-if="topGameStats.ptsCounter >1 ">{[{topGameStats.ptsCounter}]} times, last was </span> -->
+                <span v-if="carrerHighs.freeThrowAttemptsGame.venue.neutralgame === 'Y'"> vs.</span>
+                <span v-else-if="carrerHighs.freeThrowAttemptsGame.venue.homeid === 'BYU'"> </span>
+                <span v-else> @</span>
+                {{ carrerHighs.freeThrowAttemptsGame.title }} ({{ formDateStrWithYear(carrerHighs.freeThrowAttemptsGame.event_date)}})
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Offensive Rebounds</td>
+            <td nowrap>-</td>
+            <td nowrap>
+              <span>
+                <strong>{{ carrerHighs.offensiveReboundsGame.stats.oreb }}</strong>
+                <!-- <span v-if="topGameStats.ptsCounter >1 ">{[{topGameStats.ptsCounter}]} times, last was </span> -->
+                <span v-if="carrerHighs.offensiveReboundsGame.venue.neutralgame === 'Y'"> vs.</span>
+                <span v-else-if="carrerHighs.offensiveReboundsGame.venue.homeid === 'BYU'"> </span>
+                <span v-else> @</span>
+                {{ carrerHighs.offensiveReboundsGame.title }} ({{ formDateStrWithYear(carrerHighs.offensiveReboundsGame.event_date)}})
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Defensive Rebounds</td>
+            <td nowrap>-</td>
+            <td nowrap>
+              <span>
+                <strong>{{ carrerHighs.defensiveReboundsGame.stats.dreb }}</strong>
+                <!-- <span v-if="topGameStats.ptsCounter >1 ">{[{topGameStats.ptsCounter}]} times, last was </span> -->
+                <span v-if="carrerHighs.defensiveReboundsGame.venue.neutralgame === 'Y'"> vs.</span>
+                <span v-else-if="carrerHighs.defensiveReboundsGame.venue.homeid === 'BYU'"> </span>
+                <span v-else> @</span>
+                {{ carrerHighs.defensiveReboundsGame.title }} ({{ formDateStrWithYear(carrerHighs.defensiveReboundsGame.event_date)}})
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Total Rebounds</td>
+            <td nowrap>-</td>
+            <td nowrap>
+              <span>
+                <strong>{{ carrerHighs.totalReboundsGame.stats.treb }}</strong>
+                <!-- <span v-if="topGameStats.ptsCounter >1 ">{[{topGameStats.ptsCounter}]} times, last was </span> -->
+                <span v-if="carrerHighs.totalReboundsGame.venue.neutralgame === 'Y'"> vs.</span>
+                <span v-else-if="carrerHighs.totalReboundsGame.venue.homeid === 'BYU'"> </span>
+                <span v-else> @</span>
+                {{ carrerHighs.totalReboundsGame.title }} ({{ formDateStrWithYear(carrerHighs.totalReboundsGame.event_date)}})
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Assists</td>
+            <td nowrap>-</td>
+            <td nowrap>
+              <span>
+                <strong>{{ carrerHighs.assistsGame.stats.ast }}</strong>
+                <span v-if="carrerHighs.assistsGame.stats.highestValueHappenTimes > 1"> occurred {{carrerHighs.assistsGame.stats.highestValueHappenTimes}} times, last was </span>
+                <span v-if="carrerHighs.assistsGame.venue.neutralgame === 'Y'"> vs.</span>
+                <span v-else-if="carrerHighs.assistsGame.venue.homeid === 'BYU'"> </span>
+                <span v-else> @</span>
+                {{ carrerHighs.assistsGame.title }} ({{ formDateStrWithYear(carrerHighs.assistsGame.event_date)}})
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Steals</td>
+            <td nowrap>-</td>
+            <td nowrap>
+              <span>
+                <strong>{{ carrerHighs.stealsGame.stats.stl }}</strong>
+                <!-- <span v-if="topGameStats.ptsCounter >1 ">{[{topGameStats.ptsCounter}]} times, last was </span> -->
+                <span v-if="carrerHighs.stealsGame.venue.neutralgame === 'Y'"> vs.</span>
+                <span v-else-if="carrerHighs.stealsGame.venue.homeid === 'BYU'"> </span>
+                <span v-else> @</span>
+                {{ carrerHighs.stealsGame.title }} ({{ formDateStrWithYear(carrerHighs.stealsGame.event_date)}})
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Blocks</td>
+            <td nowrap>-</td>
+            <td nowrap>
+              <span>
+                <strong>{{ carrerHighs.blocksGame.stats.blk }}</strong>
+                <!-- <span v-if="topGameStats.ptsCounter >1 ">{[{topGameStats.ptsCounter}]} times, last was </span> -->
+                <span v-if="carrerHighs.blocksGame.venue.neutralgame === 'Y'"> vs.</span>
+                <span v-else-if="carrerHighs.blocksGame.venue.homeid === 'BYU'"> </span>
+                <span v-else> @</span>
+                {{ carrerHighs.blocksGame.title }} ({{ formDateStrWithYear(carrerHighs.blocksGame.event_date)}})
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Minutes</td>
+            <td nowrap>-</td>
+            <td nowrap>
+              <span>
+                <strong>{{ carrerHighs.minutesGame.stats.min }}</strong>
+                <!-- <span v-if="topGameStats.ptsCounter >1 ">{[{topGameStats.ptsCounter}]} times, last was </span> -->
+                <span v-if="carrerHighs.minutesGame.venue.neutralgame === 'Y'"> vs.</span>
+                <span v-else-if="carrerHighs.minutesGame.venue.homeid === 'BYU'"> </span>
+                <span v-else> @</span>
+                {{ carrerHighs.minutesGame.title }} ({{ formDateStrWithYear(carrerHighs.minutesGame.event_date)}})
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>Career & Season Stats</h4>
+    <div class="table-responsive">
+      <table class="table-striped table-sm table-condensed table table-hover table-bordered total_up">
+        <thead>
+          <tr>
+            <th nowrap>Year</th>
+            <th nowrap>GP</th>
+            <th nowrap>GS</th>
+            <th nowrap>MIN</th>
+            <th nowrap>AVG</th>
+            <th nowrap>FG-FGA</th>
+            <th nowrap>FG%</th>
+            <th nowrap>3P-3PA</th>
+            <th nowrap>3P%</th>
+            <th nowrap>FT-FTA</th>
+            <th nowrap>FT%</th>
+            <th nowrap>OFF</th>
+            <th nowrap>DEF</th>
+            <th nowrap>REB</th>
+            <th nowrap>AVG</th>
+            <th nowrap>AST</th>
+            <th nowrap>AVG</th>
+            <th nowrap>BLK</th>
+            <th nowrap>STL</th>
+            <th nowrap>PF</th>
+            <th nowrap>TO</th>
+            <th nowrap>PTS</th>
+            <th nowrap>AVG</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(totals,index) in totalsByYear" :key="index">
+            <td nowrap>{{totals.schedule_year}}</td>
+            <td nowrap>{{totals.gp }}</td>
+            <td nowrap>{{totals.gs }}</td>
+            <td nowrap>{{totals.stats.min }}</td>
+            <td nowrap>{{totals.stats.minavg }}</td>
+            <td nowrap>{{totals.stats.fgm }}-{{ totals.stats.fga  }}</td>
+            <td nowrap>{{totals.stats.fgm_fga_percent }}</td>
+            <td nowrap>{{totals.stats.fgm3 }}-{{totals.stats.fga3 }}</td>
+            <td nowrap>{{totals.stats.fgm3_fga3_percent }}</td>
+            <td nowrap>{{totals.stats.ftm }}-{{totals.stats.fta }}</td>
+            <td nowrap>{{totals.stats.ftm_fta_percent}}</td>
+            <td nowrap>{{totals.stats.oreb}}</td>
+            <td nowrap>{{totals.stats.dreb}}</td>
+            <td nowrap>{{totals.stats.treb}}</td>
+            <td nowrap>{{totals.stats.trebavg  }}</td>
+            <td nowrap>{{totals.stats.ast}}</td>
+            <td nowrap>{{totals.stats.astavg }}</td>
+            <td nowrap>{{totals.stats.blk}}</td>
+            <td nowrap>{{totals.stats.stl}}</td>
+            <td nowrap>{{totals.stats.pf}}</td>
+            <td nowrap>{{totals.stats.to}}</td>
+            <td nowrap>{{totals.stats.tp}}</td>
+            <td nowrap>{{totals.stats.tpavg }}</td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -92,63 +277,52 @@
         <table class=" table-striped table-sm table-condensed table table-hover table-bordered total_up">
           <thead>
             <tr>
-              <th colspan="4">{{ year }} Games</th>
-              <th colspan="7">Scoring</th>
-              <th colspan="8">Misc</th>
+              <th nowrap>{{ year }} Opponent</th>
+              <th nowrap>Date</th>
+              <th nowrap>Result</th>
+              <th nowrap>MIN</th>
+              <th nowrap>FG-FGA</th>
+              <th nowrap>FG%</th>
+              <th nowrap>3P-3PA</th>
+              <th nowrap>3P%</th>
+              <th nowrap>FT-FTA</th>
+              <th nowrap>FT%</th>
+              <th nowrap>OFF</th>
+              <th nowrap>DEF</th>
+              <th nowrap>REB</th>
+              <th nowrap>AST</th>
+              <th nowrap>BLK</th>
+              <th nowrap>STL</th>
+              <th nowrap>PF</th>
+              <th nowrap>TO</th>
+              <th nowrap>PTS</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th>Opponent</th>
-              <th>Date</th>
-              <th>Result</th>
-              <th>MIN</th>
-              <th>PTS</th>
-              <th>FG-FGA</th>
-              <th>FG%</th>
-              <th>3P-3PA</th>
-              <th>3P%</th>
-              <th>FT-FTA</th>
-              <th>FT%</th>
-              <th>OFF</th>
-              <th>DEF</th>
-              <th>REB</th>
-              <th>AST</th>
-              <th>BLK</th>
-              <th>STL</th>
-              <th>PF</th>
-              <th>TO</th>
-            </tr>
             <tr v-for="(game, _id) in gamesFilterEventsByYear(year)" :key="_id">
-              <!-- <td nowrap style="text-align: left">
-                <span v-if="game.venue.stadium  != 'LaVell Edwards' && game.venue.neutralgame != 'Y' ">@</span>{{game.title}}
-              </td> -->
-              <!-- <td nowrap>{{ formDateStr(game.event_date) }}</td> -->
-              <!-- <td nowrap v-if="(game.byu_score - 0) > (game.opp_score - 0)"><b style="color: green">W </b> {{ game.byu_score }}-{{ game.opp_score }}</td> -->
-              <!-- <td nowrap v-if="(game.byu_score - 0) == (game.opp_score - 0)"><b style="color: blue">T </b> {{ game.byu_score }}-{{ game.opp_score }}</td> -->
-              <!-- <td nowrap v-if="(game.byu_score - 0) < (game.opp_score - 0)"><b style="color: red">L </b> {{ game.byu_score }}-{{ game.opp_score }}</td> -->
-              <!-- <td v-if="game.min && game.min" nowrap>{{ game.min }}</td><td v-else>0</td> -->
-              <!-- <td v-if="game.misc && game.misc.pts" nowrap>{{ game.misc.pts }}</td><td v-else>0</td> -->
-                <!-- fg / fg att -->
-              <!-- <td v-if="game.scoring && game.scoring.fg && game.scoring.fga" nowrap>{{ (game.scoring.fg / game.scoring.fga).toFixed(2) }}</td><td v-else>0</td> -->
-                <!-- PCT: fg / fg att -->
-              <!-- <td v-if="game.scoring && game.scoring.fg && game.pass.fga" nowrap>{{ (game.pass.fg / game.pass.fga * 100).toFixed(2) }}%</td><td v-else>0</td> -->
-               <!-- 3p / 3p att -->
-              <!-- <td v-if="game.scoring && game.scoring.threep && game.scoring.threepa" nowrap>{{ (game.scoring.threep / game.scoringthreepa).toFixed(2) }}</td><td v-else>0</td> -->
-                <!-- PCT: 3p / 3p att -->
-              <!-- <td v-if="game.scoring && game.scoring.threep && game.pass.threepa" nowrap>{{ (game.pass.threep / game.pass.threepa).toFixed(2) }}</td><td v-else>0</td> -->
-               <!-- ft / ft att -->
-              <!-- <td v-if="game.scoring && game.scoring.ft && game.scoring.fta" nowrap>{{ (game.scoring.ft / game.scoring.fta).toFixed(2) }}</td><td v-else>0</td> -->
-                <!-- PCT: ft / ft att -->
-              <!-- <td v-if="game.scoring && game.scoring.ft && game.pass.fta" nowrap>{{ (game.pass.ft / game.pass.fta).toFixed(2) }}</td><td v-else>0</td> -->
-              <!-- <td v-if="game.misc && game.misc.off" nowrap>{{ game.misc.off }}</td><td v-else>0</td> -->
-              <!-- <td v-if="game.misc && game.misc.def" nowrap>{{ game.misc.def }}</td><td v-else>0</td> -->
-              <!-- <td v-if="game.misc && game.misc.reb" nowrap>{{ game.misc.reb }}</td><td v-else>0</td> -->
-              <!-- <td v-if="game.misc && game.misc.ast" nowrap>{{ game.misc.ast }}</td><td v-else>0</td> -->
-              <!-- <td v-if="game.misc && game.misc.blk" nowrap>{{ game.misc.blk }}</td><td v-else>0</td> -->
-              <!-- <td v-if="game.misc && game.misc.stl" nowrap>{{ game.misc.stl }}</td><td v-else>0</td> -->
-              <!-- <td v-if="game.misc && game.misc.pf" nowrap>{{ game.misc.pf }}</td><td v-else>0</td> -->
-              <!-- <td v-if="game.misc && game.misc.to" nowrap>{{ game.misc.to }}</td><td v-else>0</td> -->
+              <td nowrap style="text-align: left; color:#00a2e8;">
+                <span v-if="game.venue.homename != 'BYU' && game.venue.neutralgame != 'Y' ">@</span>{{game.title}}
+              </td>
+              <td nowrap>{{ formDateStr(game.event_date) }}</td>
+              <td nowrap v-if="(game.byu_score - 0) > (game.opp_score - 0)"><b style="color: green">W </b> {{ game.byu_score }}-{{ game.opp_score }}</td>
+              <td nowrap v-if="(game.byu_score - 0) == (game.opp_score - 0)"><b style="color: blue">T </b> {{ game.byu_score }}-{{ game.opp_score }}</td>
+              <td nowrap v-if="(game.byu_score - 0) < (game.opp_score - 0)"><b style="color: red">L </b> {{ game.byu_score }}-{{ game.opp_score }}</td>
+              <td nowrap>{{ game.stats.min }}</td>
+              <td nowrap>{{ game.stats.fgm }}-{{ game.stats.fga }}</td>
+              <td nowrap>{{ game.stats.fgm_fga_percent }}</td>
+              <td nowrap>{{ game.stats.fgm3 }}-{{ game.stats.fga3 }}</td>
+              <td nowrap>{{ game.stats.fgm3_fga3_percent}}</td>
+              <td nowrap>{{ game.stats.ftm }}-{{ game.stats.fta }}</td>
+              <td nowrap>{{ game.stats.ftm_fta_percent }}</td>
+              <td nowrap>{{ game.stats.oreb }}</td>
+              <td nowrap>{{ game.stats.dreb }}</td>
+              <td nowrap>{{ game.stats.treb }}</td>
+              <td nowrap>{{ game.stats.ast }}</td>
+              <td nowrap>{{ game.stats.blk }}</td>
+              <td nowrap>{{ game.stats.stl }}</td>
+              <td nowrap>{{ game.stats.pf }}</td>
+              <td nowrap>{{ game.stats.to }}</td>
+              <td nowrap>{{ game.stats.tp }}</td>
             </tr>
           </tbody>
         </table>
@@ -180,9 +354,11 @@ export default {
         'Dec.' // "December",
       ],
       totalsByYear: [],
-      careerTotals: [],
       gamesRecordPlayerInCleared: [],
-      gameYears: []
+      gameYears: [],
+      lastSeasonHighs: [], // highest value based on last year
+      carrerHighs: [], // highest value based on whole carrer year
+      carrerSeasonGames: []
     }
   },
   computed: {
@@ -231,10 +407,11 @@ export default {
       this.gameYears.sort()
       this.gameYears.reverse()
       this.calTotalsByYear(this.gameYears)
+      this.gamesRecordPlayerInCleared.sort(this.dateSort)
 
-      console.log('selected', this.selected)
-      console.log('gamesRecordPlayerInCleared', this.gamesRecordPlayerInCleared)
-      console.log('gameYears', this.gameYears)
+      // console.log('selected', this.selected)
+      // console.log('gamesRecordPlayerInCleared', this.gamesRecordPlayerInCleared)
+      // console.log('gameYears', this.gameYears)
     },
     formDateStr (str) {
       var date = new Date(str)
@@ -243,8 +420,49 @@ export default {
       var dateStr = this.months[date.getMonth()] + ' ' + date.getDate()
       return dateStr
     },
+    formDateStrWithYear (str) {
+      var date = new Date(str)
+      // need to double check if area different then show different data
+      date.setHours(date.getHours() - 6)
+      var dateStr = this.months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear()
+      return dateStr
+    },
     gamesFilterEventsByYear (year) {
-      return this.gamesRecordPlayerInCleared.filter(game => game.schedule_year === year).sort(this.dateSort)
+      const games = this.gamesRecordPlayerInCleared.filter(game => game.schedule_year === year)
+      for (var i = 0; i < games.length; i++) {
+        if (!games[i].stats.min) games[i].stats.min = 0
+        if (!games[i].stats.fgm) games[i].stats.fgm = 0
+        if (!games[i].stats.fga || games[i].stats.fga === '0') {
+          games[i].stats.fga = 0
+          games[i].stats.fgm_fga_percent = '0.000'
+        } else {
+          games[i].stats.fgm_fga_percent = (games[i].stats.fgm / games[i].stats.fga).toFixed(3)
+        }
+        if (!games[i].stats.fgm3) games[i].stats.fgm3 = 0
+        if (!games[i].stats.fga3 || games[i].stats.fta3 === '0') {
+          games[i].stats.fga3 = 0
+          games[i].stats.fgm3_fga3_percent = '0.000'
+        } else {
+          games[i].stats.fgm3_fga3_percent = (games[i].stats.fgm3 / games[i].stats.fga3).toFixed(3)
+        }
+        if (!games[i].stats.ftm) games[i].stats.ftm = 0
+        if (!games[i].stats.fta || games[i].stats.fta === '0') {
+          games[i].stats.fta = 0
+          games[i].stats.ftm_fta_percent = '0.000'
+        } else {
+          games[i].stats.ftm_fta_percent = (games[i].stats.ftm / games[i].stats.fta).toFixed(3)
+        }
+        if (!games[i].stats.oreb) games[i].stats.oreb = 0
+        if (!games[i].stats.dreb) games[i].stats.dreb = 0
+        if (!games[i].stats.treb) games[i].stats.treb = 0
+        if (!games[i].stats.ast) games[i].stats.ast = 0
+        if (!games[i].stats.blk) games[i].stats.blk = 0
+        if (!games[i].stats.stl) games[i].stats.stl = 0
+        if (!games[i].stats.pf) games[i].stats.pf = 0
+        if (!games[i].stats.to) games[i].stats.to = 0
+        if (!games[i].stats.tp) games[i].stats.tp = 0
+      }
+      return games
     },
     dateSort (a, b) {
       if (a.event_date < b.event_date) {
@@ -256,75 +474,41 @@ export default {
       return 0
     },
     calTotalsByYear (years) {
+      this.totalsByYear = []
       for (let i = 0; i < years.length; i++) {
         const gamesByYear = this.gamesFilterEventsByYear(years[i])
         const gamesTotalByYear = {
           schedule_year: years[i],
           gp: this.getGP(gamesByYear),
           gs: this.getGS(gamesByYear),
-          result: {
-            win: this.getWinGame(gamesByYear),
-            lose: this.getLoseGame(gamesByYear)
-          },
-          scoring: {
-            pts: this.calTotal(gamesByYear, 'scoring', 'pts'),
-            ptsavg: this.calTotal(gamesByYear, 'scoring', 'ptsavg'),
-            fgfga: this.calTotal(gamesByYear, 'scoring', 'fgfga'),
-            fgpercent: this.calTotal(gamesByYear, 'scoring', 'fgpercent'),
-            threemadevsa: this.calTotal(gamesByYear, 'scoring', 'threemadevsa'),
-            threepercent: this.calTotal(gamesByYear, 'scoring', 'threepercent'),
-            ftmadevsatt: this.calTotal(gamesByYear, 'scoring', 'ftmadevsatt'),
-            ftpercent: this.calTotal(gamesByYear, 'scoring', 'ftpercent')
-          },
-          misc: {
-            minutes: this.calTotal(gamesByYear, 'misc', 'minutes'),
-            minavg: this.calTotal(gamesByYear, 'misc', 'minavg'),
-            off: this.calTotal(gamesByYear, 'misc', 'off'),
-            def: this.calTotal(gamesByYear, 'misc', 'def'),
-            reb: this.calTotal(gamesByYear, 'misc', 'reb'),
-            rebavg: this.calTotal(gamesByYear, 'misc', 'rebavg'),
-            ast: this.calTotal(gamesByYear, 'misc', 'ast'),
-            astavg: this.calTotal(gamesByYear, 'misc', 'avg'),
-            blk: this.calTotal(gamesByYear, 'misc', 'blk'),
-            stl: this.calTotal(gamesByYear, 'misc', 'stl'),
-            pf: this.calTotal(gamesByYear, 'misc', 'pf'),
-            to: this.calTotal(gamesByYear, 'misc', 'to')
+          stats: {
+            min: this.calTotal(gamesByYear, 'stats', 'min'),
+            minavg: this.getAVG(this.calTotal(gamesByYear, 'stats', 'min'), this.getGP(gamesByYear)),
+            fgm: this.calTotal(gamesByYear, 'stats', 'fgm'),
+            fga: this.calTotal(gamesByYear, 'stats', 'fga'),
+            fgm_fga_percent: this.getAVG(this.calTotal(gamesByYear, 'stats', 'fgm'), this.calTotal(gamesByYear, 'stats', 'fga')),
+            fgm3: this.calTotal(gamesByYear, 'stats', 'fgm3'),
+            fga3: this.calTotal(gamesByYear, 'stats', 'fga3'),
+            fgm3_fga3_percent: this.getAVG(this.calTotal(gamesByYear, 'stats', 'fgm3'), this.calTotal(gamesByYear, 'stats', 'fga3')),
+            ftm: this.calTotal(gamesByYear, 'stats', 'ftm'),
+            fta: this.calTotal(gamesByYear, 'stats', 'fta'),
+            ftm_fta_percent: this.getAVG(this.calTotal(gamesByYear, 'stats', 'ftm'), this.calTotal(gamesByYear, 'stats', 'fta')),
+            oreb: this.calTotal(gamesByYear, 'stats', 'oreb'),
+            dreb: this.calTotal(gamesByYear, 'stats', 'dreb'),
+            treb: this.calTotal(gamesByYear, 'stats', 'treb'),
+            trebavg: this.getAVG(this.calTotal(gamesByYear, 'stats', 'treb'), this.getGP(gamesByYear)),
+            ast: this.calTotal(gamesByYear, 'stats', 'ast'),
+            astavg: this.getAVG(this.calTotal(gamesByYear, 'stats', 'ast'), this.getGP(gamesByYear)),
+            blk: this.calTotal(gamesByYear, 'stats', 'blk'),
+            stl: this.calTotal(gamesByYear, 'stats', 'stl'),
+            pf: this.calTotal(gamesByYear, 'stats', 'pf'),
+            to: this.calTotal(gamesByYear, 'stats', 'to'),
+            tp: this.calTotal(gamesByYear, 'stats', 'tp'),
+            tpavg: this.getAVG(this.calTotal(gamesByYear, 'stats', 'tp'), this.getGP(gamesByYear))
           }
         }
         this.totalsByYear.push(gamesTotalByYear)
-      }
-      this.calCareerTotals()
-    },
-    calCareerTotals () {
-      if (this.totalsByYear) {
-        this.careerTotals = {
-          gp: this.getGP(this.totalsByYear),
-          gs: this.getGS(this.totalsByYear),
-          scoring: {
-            pts: this.calTotal(this.totalsByYear, 'scoring', 'pts'),
-            ptsavg: this.calTotal(this.totalsByYear, 'scoring', 'avg'),
-            fgfga: this.calTotal(this.totalsByYear, 'scoring', 'fgfga'),
-            fgpercent: this.calTotal(this.totalsByYear, 'scoring', 'fgpercent'),
-            threemadevsa: this.calTotal(this.totalsByYear, 'scoring', 'threemadevsa'),
-            threepercent: this.calTotal(this.totalsByYear, 'scoring', 'threepercent'),
-            ftmadevsatt: this.calTotal(this.totalsByYear, 'scoring', 'ftmadevsatt'),
-            ftpercent: this.calTotal(this.totalsByYear, 'scoring', 'ftpercent')
-          },
-          misc: {
-            minutes: this.calTotal(this.totalsByYear, 'misc', 'minutes'),
-            minavg: this.calTotal(this.totalsByYear, 'misc', 'avg'),
-            off: this.calTotal(this.totalsByYear, 'misc', 'off'),
-            def: this.calTotal(this.totalsByYear, 'misc', 'def'),
-            reb: this.calTotal(this.totalsByYear, 'misc', 'reb'),
-            rebavg: this.calTotal(this.totalsByYear, 'misc', 'avg'),
-            ast: this.calTotal(this.totalsByYear, 'misc', 'ast'),
-            astavg: this.calTotal(this.totalsByYear, 'misc', 'avg'),
-            blk: this.calTotal(this.totalsByYear, 'misc', 'blk'),
-            stl: this.calTotal(this.totalsByYear, 'misc', 'stl'),
-            pf: this.calTotal(this.totalsByYear, 'misc', 'pf'),
-            to: this.calTotal(this.totalsByYear, 'misc', 'to')
-          }
-        }
+        this.getHighs()
       }
     },
     getGP (games) {
@@ -345,19 +529,10 @@ export default {
       }
       return total
     },
-    getWinGame (games) {
-      let counter = 0
-      for (let i = 0; i < games.length; i++) {
-        if (games[i].byu_score > games[i].opp_score) counter += 1
-      }
-      return counter
-    },
-    getLoseGame (games) {
-      let counter = 0
-      for (let i = 0; i < games.length; i++) {
-        if (games[i].byu_score < games[i].opp_score) counter += 1
-      }
-      return counter
+    getAVG (numerator, denominator) {
+      if (denominator === 0) return 0
+      const avg = (numerator / denominator).toFixed(3)
+      return avg
     },
     calTotal (games, categoryKey, statsKey) {
       let total = 0
@@ -370,6 +545,55 @@ export default {
     },
     getTotalsByYear (year) {
       return this.totalsByYear.filter(total => total.schedule_year === year)
+    },
+    getHighs () {
+      this.lastSeasonHighs = []
+      this.carrerHighs = []
+      this.carrerSeasonGames = []
+
+      const game = this.gamesRecordPlayerInCleared
+      this.carrerHighs = {
+        pointsGame: this.getHighestRecord(game, 'tp'),
+        fieldGoalsMadeGame: this.getHighestRecord(game, 'fgm'),
+        fieldGoalsAttemptsGame: this.getHighestRecord(game, 'fga'),
+        threePointFieldGoalsMadeGame: this.getHighestRecord(game, 'fgm3'),
+        threePointFieldGoalsAttemptsGame: this.getHighestRecord(game, 'fga3'),
+        freeThrowsMadeGame: this.getHighestRecord(game, 'ftm'),
+        freeThrowAttemptsGame: this.getHighestRecord(game, 'fta'),
+        offensiveReboundsGame: this.getHighestRecord(game, 'oreb'),
+        defensiveReboundsGame: this.getHighestRecord(game, 'dreb'),
+        totalReboundsGame: this.getHighestRecord(game, 'treb'),
+        assistsGame: this.getHighestRecord(game, 'ast'),
+        stealsGame: this.getHighestRecord(game, 'stl'),
+        blocksGame: this.getHighestRecord(game, 'blk'),
+        minutesGame: this.getHighestRecord(game, 'min')
+      }
+      console.log(this.carrerHighs)
+    },
+    getHighestRecord (game, categoryKey) {
+      let highestValue = 0
+      let highestValueHappenTimes = 0
+      let targetGame = null
+
+      for (let i = 0; i < game.length; i++) {
+        if (parseInt(game[i].stats[categoryKey]) > highestValue) {
+          // reset happen times because game change
+          highestValueHappenTimes = 1
+          highestValue = parseInt(game[i].stats[categoryKey])
+          targetGame = game[i]
+          if (categoryKey === 'ast') {
+            console.log('game', game)
+            console.log('i', i)
+            console.log('highestValue', highestValue)
+            console.log('targetGame', targetGame)
+          }
+        } else if (parseInt(game[i].stats[categoryKey]) === highestValue) {
+          targetGame = game[i]
+          highestValueHappenTimes++
+        }
+        game[i].stats.highestValueHappenTimes = highestValueHappenTimes
+      }
+      return targetGame
     }
   }
 }
