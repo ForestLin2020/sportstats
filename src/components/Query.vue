@@ -288,6 +288,7 @@ export default {
       // clear old data and disable the submit button when data is not received.
       this.gamesRecordPlayerIn = null
       this.stats = null
+      this.isStatsExist = true
     },
     async getData () {
       if (this.selected.athleteNid) {
