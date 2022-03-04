@@ -564,9 +564,9 @@ export default {
       this.calTotalsByYear(this.gameYears)
       this.gamesRecordPlayerInCleared.sort(this.dateSort)
 
-      console.log('selected', this.selected)
-      console.log('gamesRecordPlayerInCleared', this.gamesRecordPlayerInCleared)
-      console.log('gameYears', this.gameYears)
+      // console.log('selected', this.selected)
+      // console.log('gamesRecordPlayerInCleared', this.gamesRecordPlayerInCleared)
+      // console.log('gameYears', this.gameYears)
     },
     formDateStr (str) {
       var date = new Date(str)
@@ -727,7 +727,6 @@ export default {
         blocksGame: this.getHighestRecord(game, 'blk'),
         minutesGame: this.getHighestRecord(game, 'min')
       }
-      console.log(' this.gameYears in here', this.gameYears)
       const lastYear = this.gameYears[0]
       game = this.gamesFilterEventsByYear(lastYear)
       game.sort(this.dateSort)
