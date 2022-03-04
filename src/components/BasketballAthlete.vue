@@ -558,7 +558,7 @@ export default {
       }
 
       // ===== Order the games' year for table order =====
-      this.fillEmptyCategoryandStats()
+      this.fillEmptyCategoryAndStats()
       this.gameYears.sort()
       this.gameYears.reverse()
       this.calTotalsByYear(this.gameYears)
@@ -586,7 +586,7 @@ export default {
       const games = this.gamesRecordPlayerInCleared.filter(game => game.schedule_year === year)
       return games
     },
-    fillEmptyCategoryandStats () {
+    fillEmptyCategoryAndStats () {
       const games = this.gamesRecordPlayerInCleared
       for (var i = 0; i < games.length; i++) {
         if (!games[i].stats) games[i].stats = {}
