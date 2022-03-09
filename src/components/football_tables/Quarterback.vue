@@ -326,14 +326,14 @@ export default {
     getWinGame (games) {
       let counter = 0
       for (let i = 0; i < games.length; i++) {
-        if (games[i].byu_score > games[i].opp_score) counter += 1
+        if (parseInt(games[i].byu_score) > parseInt(games[i].opp_score)) counter += 1
       }
       return counter
     },
     getLoseGame (games) {
       let counter = 0
       for (let i = 0; i < games.length; i++) {
-        if (games[i].byu_score < games[i].opp_score) counter += 1
+        if (parseInt(games[i].byu_score) < parseInt(games[i].opp_score)) counter += 1
       }
       return counter
     },

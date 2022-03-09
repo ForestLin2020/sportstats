@@ -1,13 +1,13 @@
 <template>
   <h1>Baseball</h1>
     <NonPitcher
-      v-if="playerPositions.indexOf('p') === -1"
+      v-if="playerPositions.indexOf('p') === -1 & playerPositions.length > 0"
       :selected="selected"
       :gamesRecordPlayerInCleared="gamesRecordPlayerInCleared"
       :gameYears="gameYears"
     />
     <Pitcher
-      v-if="playerPositions.indexOf('p') !== -1"
+      v-if="playerPositions.indexOf('p') !== -1 & playerPositions.length > 0"
       :selected="selected"
       :gamesRecordPlayerInCleared="gamesRecordPlayerInCleared"
       :gameYears="gameYears"
