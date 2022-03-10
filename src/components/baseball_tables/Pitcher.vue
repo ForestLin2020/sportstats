@@ -323,9 +323,7 @@ export default {
       let total = 0
       for (let i = 0; i < games.length; i++) {
         if (games[i] && games[i][categoryKey] && games[i][categoryKey][statsKey]) {
-          if (statsKey === 'ip') console.log('ip', games[i][categoryKey][statsKey] - 0)
           total += (games[i][categoryKey][statsKey] - 0)
-          if (statsKey === 'ip') console.log('total', total)
         }
       }
       // Math.round((total + Number.EPSILON) * 100) / 100, fixing weird issue: 6.3 + 0.1 = 6.399999999995

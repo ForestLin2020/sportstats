@@ -55,7 +55,7 @@
               id="category"
               class="form-select"
               v-model="selected.category"
-              @change="getAthleteOrGamesOrCoach()"
+              @change="getAthleteOrGamesOrCoach(); getSeasonStats(); "
             >
               <option value="athlete">Athlete</option>
               <option value="coach">Coach</option>
@@ -232,11 +232,11 @@
 </template>
 
 <script>
-import FootballAthlete from '@/components/FootballAthlete.vue'
-import VolleyballAthlete from '@/components/VolleyballAthlete.vue'
-import BaseballAthlete from '@/components/BaseballAthlete.vue'
-import BasketballAthlete from '@/components/BasketballAthlete.vue'
-import SoccerAthlete from '@/components/SoccerAthlete.vue'
+import FootballAthlete from '@/components/football_tables/FootballAthlete.vue'
+import VolleyballAthlete from '@/components/volleyball_tables/VolleyballAthlete.vue'
+import BaseballAthlete from '@/components/baseball_tables/BaseballAthlete.vue'
+import BasketballAthlete from '@/components/basketball_tables/BasketballAthlete.vue'
+import SoccerAthlete from '@/components/soccer_tables/SoccerAthlete.vue'
 import VolleyballBoxScore from '@/components/boxscore_tables/VolleyballBoxScore.vue'
 import SoccerBoxScore from '@/components/boxscore_tables/SoccerBoxScore.vue'
 import FootballBoxScore from '@/components/boxscore_tables/FootballBoxScore.vue'
@@ -284,6 +284,17 @@ export default {
     WomensBasketballBoxScore
   },
   methods: {
+    async getSeasonStats () {
+      // if (this.selected.category === 'season-stats') {
+      //   const dataURL = 'https://gamestats.byucougars.byu-dept-athletics-dev.amazon.byu.edu/seasonstats/77638,107076'
+      //   console.log('dataURL', dataURL)
+      //   const res = await fetch(dataURL)
+      //   const data = await res.json()
+      //   // this.gameRecords = data[0]
+      //   console.log('data', data)
+      // }
+      // console.log(this.selected)
+    },
     changeAthleteGameCoachClear () {
       // clear old data and disable the submit button when data is not received.
       this.gamesRecordPlayerIn = null
@@ -324,6 +335,7 @@ export default {
       }
       // show box score table
       this.stats = this.gameRecords
+      console.log(this.selected)
 
       // show info if there is no stats for player
       this.statsExist()
