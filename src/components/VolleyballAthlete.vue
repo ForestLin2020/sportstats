@@ -204,8 +204,6 @@ export default {
         const byuTeamIndex = data[i].vbgame.team.findIndex(x => (x.id === 'BYU' || x.name === 'BYU')) // find index in array
         const oppoTeamIndex = data[i].vbgame.team.findIndex(x => x.id !== 'BYU') // find index in array
         const byuTeamStat = data[i].vbgame.team[byuTeamIndex]
-        console.log('i', i)
-        console.log('this.selected.athleteNid', this.selected.athleteNid)
         const playerIndex = byuTeamStat.player.findIndex(x => x.player_nid === this.selected.athleteNid - 0)
         const playerStat = byuTeamStat.player[playerIndex]
 

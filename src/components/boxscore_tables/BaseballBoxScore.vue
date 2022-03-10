@@ -87,7 +87,7 @@
               <td v-if="player.hitting.ab !== '0'">{{(player.hitting.h / player.hitting.ab).toFixed(3) }}</td>
               <td v-else>N/A</td>
               <!-- Slugging % (SLG) -->
-              <td v-if="player.hitting.ab !== '0'">{{ (((player.hitting.h - 0) + (player.hitting.double - 0) + (player.hitting.triple - 0) * 2 + (player.hitting.hr - 0) * 3) / player.hitting.ab).toFixed(3) }}</td>
+              <td v-if="player.hitting.ab !== '0'">{{ (((player.hitting.h - 0) + (player.hitting.double - 0) * 2 + (player.hitting.triple - 0) * 3 + (player.hitting.hr - 0) * 4) / player.hitting.ab).toFixed(3) }}</td>
               <td v-else>N/A</td>
               <!-- On Base % (OBP) -->
               <td v-if="((player.hitting.ab - 0) + (player.hitting.bb - 0) + (player.hitting.hbp - 0) + (player.hitting.sf - 0)) !== 0">{{(((player.hitting.h - 0) + (player.hitting.bb - 0) + (player.hitting.hbp - 0)) / ((player.hitting.ab - 0) + (player.hitting.bb - 0) + (player.hitting.hbp - 0) + (player.hitting.sf - 0))).toFixed(3)}}</td>
@@ -278,7 +278,7 @@ export default {
         totals.hitting.slg = 'N/A'
       } else {
         totals.hitting.avg = ((totals.hitting.h - 0) / (totals.hitting.ab - 0)).toFixed(3)
-        totals.hitting.slg = (((totals.hitting.h - 0) + (totals.hitting.double - 0) + (totals.hitting.triple - 0) * 2 + (totals.hitting.hr - 0) * 3) / (totals.hitting.ab - 0)).toFixed(3)
+        totals.hitting.slg = (((totals.hitting.h - 0) + (totals.hitting.double - 0) * 2 + (totals.hitting.triple - 0) * 3 + (totals.hitting.hr - 0) * 4) / (totals.hitting.ab - 0)).toFixed(3)
       }
       if (!totals.hitting.r) totals.hitting.r = 0
       if (!totals.hitting.rbi) totals.hitting.rbi = 0

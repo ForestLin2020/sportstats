@@ -69,6 +69,10 @@ export default {
         // ===== Determine player position =====
         if (playerStat.pos && this.playerPositions.indexOf(playerStat.pos) === -1) {
           this.playerPositions.push(playerStat.pos)
+        } else if (playerStat.pitching && this.playerPositions.indexOf('p') === -1) {
+          this.playerPositions.push('p')
+        } else if (playerStat.hitting === -1) {
+          this.playerPositions.push('non-p')
         }
 
         // ===== store different years for grouping stats table =====

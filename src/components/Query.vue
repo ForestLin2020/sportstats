@@ -175,13 +175,13 @@
       />
       <BaseballAthlete
         ref="myBaseball"
-        v-if="selected.sport == '1698' && gamesRecordPlayerIn"
+        v-if="selected.sport == '1698' || selected.sport == '1712'  && gamesRecordPlayerIn"
         :selected="selected"
         :gamesRecordPlayerIn="gamesRecordPlayerIn"
       />
       <BasketballAthlete
         ref="myBasketball"
-        v-if="(selected.sport == '1699') | (selected.sport == '1707') && gamesRecordPlayerIn"
+        v-if="(selected.sport == '1699') || (selected.sport == '1707') && gamesRecordPlayerIn"
         :selected="selected"
         :gamesRecordPlayerIn="gamesRecordPlayerIn"
       />
@@ -311,7 +311,7 @@ export default {
     },
     submit () {
       // call child function to clear and reorganize the data, and then show table
-      if (this.selected.sport === '1698' && this.selected.athleteNid) {
+      if ((this.selected.sport === '1698' || this.selected.sport === '1712') && this.selected.athleteNid) {
         this.$refs.myBaseball.reorganizeGames()
       } else if ((this.selected.sport === '1699' || this.selected.sport === '1707') && this.selected.athleteNid) {
         this.$refs.myBasketball.reorganizeGames()

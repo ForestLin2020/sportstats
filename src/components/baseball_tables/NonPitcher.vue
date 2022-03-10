@@ -53,34 +53,37 @@
             <td>{{ totals.hitting.hbp }}</td>
             <td>{{ totals.hitting.avg }}</td>
             <td>{{ totals.hitting.slg }}</td>
-            <td>{{ (((totals.hitting.h - 0) + (totals.hitting.bb - 0) + (totals.hitting.hbp - 0)) / ((totals.hitting.ab - 0) + (totals.hitting.bb - 0) + (totals.hitting.hbp - 0) + (totals.hitting.sf - 0))).toFixed(2) }}</td>
+            <td>{{ totals.hitting.obp }}</td>
             <td>{{ totals.fielding.po }}</td>
             <td>{{ totals.fielding.a }}</td>
             <td>{{ totals.fielding.e }}</td>
-            <td>{{ (((totals.fielding.po - 0) + (totals.fielding.a - 0)) / ((totals.fielding.po - 0) + (totals.fielding.a - 0) + (totals.fielding.e - 0))).toFixed(3) }}</td>
+            <td>{{ totals.fielding.fld }}</td>
           </tr>
           <tr>
             <th>TOTALS:</th>
-            <!-- <th>{{ careerTotals.gp }}</th>
+            <th>{{ careerTotals.gp }}</th>
             <th>{{ careerTotals.gs }}</th>
-            <th v-if="careerTotals.result && careerTotals.result.win">{{ careerTotals.result.win }}</th><th v-else>0</th>
-            <th v-if="careerTotals.result && careerTotals.result.lose">{{ careerTotals.result.lose }}</th><th v-else>0</th>
-            <th v-if="careerTotals.pitching && careerTotals.pitching.cg">{{ careerTotals.pitching.cg }}</th><th v-else>0</th>
-            <th v-if="careerTotals.pitching && careerTotals.pitching.sho">{{ careerTotals.pitching.sho }}</th><th v-else>0</th>
-            <th v-if="careerTotals.pitching && careerTotals.pitching.save">{{ careerTotals.pitching.save }}</th><th v-else>0</th>
-            <th v-if="careerTotals.pitching && careerTotals.pitching.ip">{{ careerTotals.pitching.ip }}</th><th v-else>0</th>
-            <th v-if="careerTotals.pitching && careerTotals.pitching.h">{{ careerTotals.pitching.h }}</th><th v-else>0</th>
-            <th v-if="careerTotals.pitching && careerTotals.pitching.r">{{ careerTotals.pitching.r }}</th><th v-else>0</th>
-            <th v-if="careerTotals.pitching && careerTotals.pitching.er">{{ careerTotals.pitching.er }}</th><th v-else>0</th>
-            <th v-if="careerTotals.pitching && careerTotals.pitching.bb">{{ careerTotals.pitching.bb }}</th><th v-else>0</th>
-            <th v-if="careerTotals.pitching && careerTotals.pitching.so">{{ careerTotals.pitching.so }}</th><th v-else>0</th>
-            <th v-if="careerTotals.pitching && careerTotals.pitching.double">{{ careerTotals.pitching.double }}</th><th v-else>0</th>
-            <th v-if="careerTotals.pitching && careerTotals.pitching.triple">{{ careerTotals.pitching.triple }}</th><th v-else>0</th>
-            <th v-if="careerTotals.pitching && careerTotals.pitching.hr">{{ careerTotals.pitching.hr }}</th><th v-else>0</th>
-            <th v-if="careerTotals.pitching && careerTotals.pitching.ab">{{ careerTotals.pitching.ab }}</th><th v-else>0</th>
-            <th v-if="careerTotals.pitching && careerTotals.pitching.hbp">{{ careerTotals.pitching.hbp }}</th><th v-else>0</th>
-            <th v-if="careerTotals.pitching && careerTotals.pitching.h && careerTotals.pitching.ab">{{ (careerTotals.pitching.h / careerTotals.pitching.ab).toFixed(3) }}</th><th v-else>0</th>
-            <th v-if="careerTotals.pitching && careerTotals.pitching.er && careerTotals.pitching.innings_pitched">{{ (careerTotals.pitching.er / careerTotals.pitching.innings_pitched * 9).toFixed(2) }}</th><th v-else>0</th> -->
+            <th v-if="careerTotals.hitting && careerTotals.hitting.ab">{{ careerTotals.hitting.ab }}</th><th v-else>0</th>
+            <th v-if="careerTotals.hitting && careerTotals.hitting.r">{{ careerTotals.hitting.r }}</th><th v-else>0</th>
+            <th v-if="careerTotals.hitting && careerTotals.hitting.h">{{ careerTotals.hitting.h }}</th><th v-else>0</th>
+            <th v-if="careerTotals.hitting && careerTotals.hitting.double">{{ careerTotals.hitting.double }}</th><th v-else>0</th>
+            <th v-if="careerTotals.hitting && careerTotals.hitting.triple">{{ careerTotals.hitting.triple }}</th><th v-else>0</th>
+            <th v-if="careerTotals.hitting && careerTotals.hitting.hr">{{ careerTotals.hitting.hr }}</th><th v-else>0</th>
+            <th v-if="careerTotals.hitting && careerTotals.hitting.rbi">{{ careerTotals.hitting.rbi }}</th><th v-else>0</th>
+            <th v-if="careerTotals.hitting && careerTotals.hitting.bb">{{ careerTotals.hitting.bb }}</th><th v-else>0</th>
+            <th v-if="careerTotals.hitting && careerTotals.hitting.so">{{ careerTotals.hitting.so }}</th><th v-else>0</th>
+            <th v-if="careerTotals.hitting && careerTotals.hitting.sb">{{ careerTotals.hitting.sb }}</th><th v-else>0</th>
+            <th v-if="careerTotals.hitting && careerTotals.hitting.cs">{{ careerTotals.hitting.cs }}</th><th v-else>0</th>
+            <th v-if="careerTotals.hitting && careerTotals.hitting.sf">{{ careerTotals.hitting.sf }}</th><th v-else>0</th>
+            <th v-if="careerTotals.hitting && careerTotals.hitting.sh">{{ careerTotals.hitting.sh }}</th><th v-else>0</th>
+            <th v-if="careerTotals.hitting && careerTotals.hitting.hbp">{{ careerTotals.hitting.hbp }}</th><th v-else>0</th>
+            <th v-if="careerTotals.hitting && careerTotals.hitting.avg">{{ careerTotals.hitting.avg }}</th><th v-else>0</th>
+            <th v-if="careerTotals.hitting && careerTotals.hitting.slg">{{ careerTotals.hitting.slg }}</th><th v-else>0</th>
+            <th v-if="careerTotals.hitting && careerTotals.hitting.obp">{{ careerTotals.hitting.obp }}</th><th v-else>0</th>
+            <th v-if="careerTotals.fielding && careerTotals.fielding.po">{{ careerTotals.fielding.po }}</th><th v-else>0</th>
+            <th v-if="careerTotals.fielding && careerTotals.fielding.a">{{ careerTotals.fielding.a }}</th><th v-else>0</th>
+            <th v-if="careerTotals.fielding && careerTotals.fielding.e">{{ careerTotals.fielding.e }}</th><th v-else>0</th>
+            <th v-if="careerTotals.fielding && careerTotals.fielding.fld">{{ careerTotals.fielding.fld }}</th><th v-else>0</th>
           </tr>
         </tbody>
       </table>
@@ -186,11 +189,11 @@
               <th>{{ totals.hitting.hbp }}</th>
               <th>{{ totals.hitting.avg }}</th>
               <th>{{ totals.hitting.slg }}</th>
-              <th>{{ (((totals.hitting.h - 0) + (totals.hitting.bb - 0) + (totals.hitting.hbp - 0)) / ((totals.hitting.ab - 0) + (totals.hitting.bb - 0) + (totals.hitting.hbp - 0) + (totals.hitting.sf - 0))).toFixed(2) }}</th>
+              <th>{{ totals.hitting.obp }}</th>
               <th>{{ totals.fielding.po }}</th>
               <th>{{ totals.fielding.a }}</th>
               <th>{{ totals.fielding.e }}</th>
-              <th>{{ (((totals.fielding.po - 0) + (totals.fielding.a - 0)) / ((totals.fielding.po - 0) + (totals.fielding.a - 0) + (totals.fielding.e - 0))).toFixed(3) }}</th>
+              <th>{{ totals.fielding.fld }}</th>
             </tr>
           </tbody>
         </table>
@@ -295,12 +298,24 @@ export default {
               this.calTotal(gamesByYear, 'hitting', 'double'),
               this.calTotal(gamesByYear, 'hitting', 'triple'),
               this.calTotal(gamesByYear, 'hitting', 'hr'),
-              this.calTotal(gamesByYear, 'hitting', 'ab'))
+              this.calTotal(gamesByYear, 'hitting', 'ab')),
+            // obp = (h + bb + hbp) / (ab + bb + hbp + sf), getOBP (h, bb, hbp, ab, sf) {...}
+            obp: this.getOBP(
+              this.calTotal(gamesByYear, 'hitting', 'h'),
+              this.calTotal(gamesByYear, 'hitting', 'bb'),
+              this.calTotal(gamesByYear, 'hitting', 'hbp'),
+              this.calTotal(gamesByYear, 'hitting', 'ab'),
+              this.calTotal(gamesByYear, 'hitting', 'sf'))
           },
           fielding: {
             po: this.calTotal(gamesByYear, 'fielding', 'po'),
             a: this.calTotal(gamesByYear, 'fielding', 'a'),
-            e: this.calTotal(gamesByYear, 'fielding', 'e')
+            e: this.calTotal(gamesByYear, 'fielding', 'e'),
+            // fld = (po + a) / (po + a + e), getFLD (po, a, e) {...}
+            fld: this.getFLD(
+              this.calTotal(gamesByYear, 'fielding', 'po'),
+              this.calTotal(gamesByYear, 'fielding', 'a'),
+              this.calTotal(gamesByYear, 'fielding', 'e'))
           }
         }
         console.log('gamesTotalByYear', gamesTotalByYear)
@@ -338,12 +353,22 @@ export default {
               this.calTotal(this.totalsByYear, 'hitting', 'double'),
               this.calTotal(this.totalsByYear, 'hitting', 'triple'),
               this.calTotal(this.totalsByYear, 'hitting', 'hr'),
-              this.calTotal(this.totalsByYear, 'hitting', 'ab'))
+              this.calTotal(this.totalsByYear, 'hitting', 'ab')),
+            obp: this.getOBP(
+              this.calTotal(this.totalsByYear, 'hitting', 'h'),
+              this.calTotal(this.totalsByYear, 'hitting', 'bb'),
+              this.calTotal(this.totalsByYear, 'hitting', 'hbp'),
+              this.calTotal(this.totalsByYear, 'hitting', 'ab'),
+              this.calTotal(this.totalsByYear, 'hitting', 'sf'))
           },
           fielding: {
             po: this.calTotal(this.totalsByYear, 'fielding', 'po'),
             a: this.calTotal(this.totalsByYear, 'fielding', 'a'),
-            e: this.calTotal(this.totalsByYear, 'fielding', 'e')
+            e: this.calTotal(this.totalsByYear, 'fielding', 'e'),
+            fld: this.getFLD(
+              this.calTotal(this.totalsByYear, 'fielding', 'po'),
+              this.calTotal(this.totalsByYear, 'fielding', 'a'),
+              this.calTotal(this.totalsByYear, 'fielding', 'e'))
           }
         }
       }
@@ -401,6 +426,18 @@ export default {
       if (ab === 0) return 0
       const slg = ((h + double * 2 + triple * 3 + hr * 4) / ab).toFixed(2)
       return slg
+    },
+    getOBP (h, bb, hbp, ab, sf) {
+      // obp = (h + bb + hbp) / (ab + bb + hbp + sf)
+      if ((ab + bb + hbp + sf) === 0) return 0
+      const obp = ((h + bb + hbp) / (ab + bb + hbp + sf)).toFixed(2)
+      return obp
+    },
+    getFLD (po, a, e) {
+      // fld = (po + a) / (po + a + e)
+      if ((po + a + e) === 0) return 0
+      const fld = ((po + a) / (po + a + e)).toFixed(2)
+      return fld
     }
   }
 }

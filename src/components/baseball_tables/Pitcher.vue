@@ -5,37 +5,7 @@
       <table class="table-striped table-sm table-condensed table table-hover table-bordered total_up">
         <thead>
           <tr>
-            <th colspan="5">Career</th>
-          </tr>
-          <tr>
-            <th>APP</th>
-            <th>IP</th>
-            <th>SO</th>
-            <th>ERA</th>
-            <th>WHIP</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th>{{ careerTotals.gp }}</th>
-            <th v-if="careerTotals.pitching && careerTotals.pitching.ip">{{ careerTotals.pitching.ip }}</th><th v-else>0</th>
-            <th v-if="careerTotals.pitching && careerTotals.pitching.so">{{ careerTotals.pitching.so }}</th><th v-else>0</th>
-            <th v-if="careerTotals.pitching && careerTotals.pitching.er && careerTotals.pitching.innings_pitched">
-              {{ (careerTotals.pitching.er / careerTotals.pitching.innings_pitched * 9).toFixed(2) }}
-            </th><th v-else>0</th>
-            <th v-if="careerTotals.pitching && careerTotals.pitching.h && careerTotals.pitching.bb && careerTotals.pitching.innings_pitched">
-              {{ ((careerTotals.pitching.h + careerTotals.pitching.bb) / careerTotals.pitching.innings_pitched).toFixed(2) }}
-            </th><th v-else>0</th>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="table-responsive">
-      <table class="table-striped table-sm table-condensed table table-hover table-bordered total_up">
-        <thead>
-          <tr>
-            <th colspan="21">Career & Season Stats</th>
+            <th colspan="22">Career & Season Stats</th>
           </tr>
           <tr>
             <th>Year</th>
@@ -59,6 +29,7 @@
             <th>HBP</th>
             <th>AVG</th>
             <th>ERA</th>
+            <th>WHIP</th>
           </tr>
         </thead>
         <tbody>
@@ -84,6 +55,7 @@
             <td>{{ totals.pitching.hbp }}</td>
             <td>{{ (totals.pitching.h / totals.pitching.ab).toFixed(3) }}</td>
             <td>{{ (totals.pitching.er / totals.pitching.innings_pitched * 9).toFixed(2) }}</td>
+            <td>{{ ((totals.pitching.h + totals.pitching.bb) / totals.pitching.innings_pitched).toFixed(2) }} </td>
           </tr>
           <tr>
             <th>TOTALS:</th>
@@ -107,6 +79,9 @@
             <th v-if="careerTotals.pitching && careerTotals.pitching.hbp">{{ careerTotals.pitching.hbp }}</th><th v-else>0</th>
             <th v-if="careerTotals.pitching && careerTotals.pitching.h && careerTotals.pitching.ab">{{ (careerTotals.pitching.h / careerTotals.pitching.ab).toFixed(3) }}</th><th v-else>0</th>
             <th v-if="careerTotals.pitching && careerTotals.pitching.er && careerTotals.pitching.innings_pitched">{{ (careerTotals.pitching.er / careerTotals.pitching.innings_pitched * 9).toFixed(2) }}</th><th v-else>0</th>
+            <th v-if="careerTotals.pitching && careerTotals.pitching.h && careerTotals.pitching.bb && careerTotals.pitching.innings_pitched">
+              {{ ((careerTotals.pitching.h + careerTotals.pitching.bb) / careerTotals.pitching.innings_pitched).toFixed(2) }}
+            </th><th v-else>0</th>
           </tr>
         </tbody>
       </table>
@@ -266,7 +241,7 @@ export default {
             lose: this.getLoseGame(gamesByYear)
           },
           pitching: {
-            ip: this.calTotal(gamesByYear, 'pitching', 'ip'),
+            ip: this.getIP(this.calTotal(gamesByYear, 'pitching', 'ip')),
             h: this.calTotal(gamesByYear, 'pitching', 'h'),
             r: this.calTotal(gamesByYear, 'pitching', 'r'),
             er: this.calTotal(gamesByYear, 'pitching', 'er'),
@@ -293,7 +268,7 @@ export default {
           gs: this.getGS(this.totalsByYear),
           gp: this.getGP(this.totalsByYear),
           pitching: {
-            ip: this.calTotal(this.totalsByYear, 'pitching', 'ip'),
+            ip: this.getIP(this.calTotal(this.totalsByYear, 'pitching', 'ip')),
             h: this.calTotal(this.totalsByYear, 'pitching', 'h'),
             r: this.calTotal(this.totalsByYear, 'pitching', 'r'),
             er: this.calTotal(this.totalsByYear, 'pitching', 'er'),
@@ -348,13 +323,32 @@ export default {
       let total = 0
       for (let i = 0; i < games.length; i++) {
         if (games[i] && games[i][categoryKey] && games[i][categoryKey][statsKey]) {
-          total += games[i][categoryKey][statsKey] - 0
+          if (statsKey === 'ip') console.log('ip', games[i][categoryKey][statsKey] - 0)
+          total += (games[i][categoryKey][statsKey] - 0)
+          if (statsKey === 'ip') console.log('total', total)
         }
       }
-      return total
+      // Math.round((total + Number.EPSILON) * 100) / 100, fixing weird issue: 6.3 + 0.1 = 6.399999999995
+      return Math.round((total + Number.EPSILON) * 100) / 100
     },
     getTotalsByYear (year) {
       return this.totalsByYear.filter(total => total.schedule_year === year)
+    },
+    getIP (ip) {
+      ip = ip.toString()
+
+      // string is not include '.0': string.indexOf('.0') === -1
+      // string include interger and tenths: ip.split('.').length !== 1
+      if (ip.indexOf('.0') === -1 && ip.split('.').length !== 1) {
+        var split = ip.split('.')
+        const quotient = Math.floor(parseInt(split[1]) / 3)
+        const remainder = parseInt(split[1]) % 3
+        split[0] = parseInt(split[0]) + quotient
+        split[1] = remainder
+        ip = split.join('.')
+        return ip
+      }
+      return ip
     }
   }
 }
