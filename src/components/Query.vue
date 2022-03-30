@@ -1,4 +1,5 @@
 <template>
+  <h1>Hi forest</h1>
   <div class="expander">
     <div class="query mt-3 p-3 container">
       <svg
