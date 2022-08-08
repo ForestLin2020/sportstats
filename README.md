@@ -1,5 +1,8 @@
 # stats-vue-cli
 
+![image](https://user-images.githubusercontent.com/59840706/183353682-76993133-0320-48f3-afd9-003f65904843.png)
+
+
 ## Project setup
 
 ```
